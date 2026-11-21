@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loup-garou du corps humain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Grenze+Gotisch:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* Plan : un village la nuit (encre bleu nuit, lune dorée, rouge sang) qui bascule au jour (ciel pâle).
+   Scène de jeu à gauche, grande et lisible au projecteur; registre du village à droite. */
+:root{
+  --ink:#0e1330;
+  --panel:#171f48;
+  --panel-2:#212a5c;
+  --text:#ede7d0;
+  --muted:#a2a7c9;
+  --accent:#d23f57;
+  --gold:#f0b35a;
+  --ok:#3fb07a;
+  --bad:#e65c70;
+  --line:rgba(237,231,208,.14);
+  --line-strong:rgba(237,231,208,.38);
+  --cA:#2f6fde;
+  --cB:#e07b12;
+  --cC:#23955a;
+  --cD:#8b4fd6;
+  --font-display:"Grenze Gotisch", "Palatino Linotype", Georgia, serif;
+  --font-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  color-scheme:dark;
+}
+body[data-mood="day"]{
+  --ink:#e4ecf3;
+  --panel:#ffffff;
+  --panel-2:#e9eff6;
+  --text:#18203d;
+  --muted:#56607f;
+  --accent:#b8263f;
+  --gold:#a8620a;
+  --ok:#1d8452;
+  --bad:#c23149;
+  --line:rgba(24,32,61,.13);
+  --line-strong:rgba(24,32,61,.34);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--ink);color:var(--text);font-family:var(--font-body);font-size:18px;line-height:1.45;transition:background-color .8s,color .8s}
+#sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:1;transition:opacity .8s}
+body[data-mood="day"] #sky{opacity:0}
+.app{position:relative;min-height:100%;display:flex;flex-direction:column}
+
+header.top{display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;padding:14px 24px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--font-display);font-weight:700;font-size:1.9rem;line-height:1;margin:0;letter-spacing:.01em}
+.brand small{font-family:var(--font-body);font-weight:400;font-size:.85rem;color:var(--muted);letter-spacing:0;margin-left:10px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;border:1px solid var(--line-strong);font-weight:700;font-size:.95rem}
+.pill .dot{width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.top-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.mini{font:inherit;font-size:.9rem;font-weight:700;padding:8px 14px;border-radius:10px;border:1px solid var(--line-strong);background:transparent;color:var(--text);cursor:pointer}
+.mini:hover{background:var(--panel-2)}
+
+main.layout{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;padding:24px;align-items:start}
+body.no-panel main.layout{grid-template-columns:minmax(0,1fr)}
+body.no-panel #village{display:none}
+@media (max-width:980px){main.layout{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){main.layout{padding:16px}}
+
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,3vw,40px);min-height:440px}
+.kicker{text-transform:uppercase;letter-spacing:.14em;font-size:.82rem;color:var(--gold);font-weight:700}
+h1.title{font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,4.4vw,3.8rem);line-height:1.02;margin:.15em 0 .35em;text-wrap:balance}
+.script{margin:0 0 8px;border-left:5px solid var(--gold);padding:14px 20px;background:var(--panel-2);border-radius:0 12px 12px 0;font-size:clamp(1.15rem,1.8vw,1.45rem);max-width:62ch}
+.script .lbl{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:4px;font-weight:700}
+.note{color:var(--muted);margin:14px 0 0;max-width:62ch}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{font:inherit;font-weight:700;font-size:1.12rem;padding:14px 24px;border-radius:12px;border:2px solid var(--accent);cursor:pointer;background:var(--accent);color:#fff}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;border-color:var(--line-strong);color:var(--text)}
+.btn.ghost:hover{background:var(--panel-2);filter:none}
+.btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* Questions */
+.q-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.chip{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:.85rem;color:#10142a;white-space:nowrap}
+.t-num{font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}
+.t-num.out{color:var(--bad)}
+.timer{height:8px;background:var(--panel-2);border-radius:99px;overflow:hidden;margin-top:12px;max-width:100%}
+.timer>i{display:block;height:100%;background:var(--gold);transition:width 1s linear}
+.q-text{font-size:clamp(1.55rem,2.8vw,2.35rem);font-weight:700;line-height:1.2;margin:20px 0 24px;max-width:38ch;text-wrap:balance}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;gap:16px;align-items:center;text-align:left;font:inherit;font-size:clamp(1.1rem,1.7vw,1.35rem);padding:16px 18px;border-radius:14px;background:var(--panel-2);color:var(--text);border:2px solid var(--line);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--line-strong)}
+.opt .lt{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--ink);font-weight:700;font-size:1.35rem}
+.opt:disabled,.opt.static{cursor:default}
+.opt.static:hover{border-color:var(--line)}
+.countbox{margin-top:18px;padding:18px 20px;border-radius:12px;background:var(--panel-2);display:flex;flex-direction:column;gap:10px;max-width:70ch}
+.countbox label{font-weight:700;font-size:1.15rem}
+.countbox input{width:110px;font-size:1.6rem;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.mini.step{font-size:1.4rem;width:48px;height:48px;padding:0}
+.countbox .hint{margin:0;color:var(--muted)}
+.opt.correct{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 24%,var(--panel-2))}
+.opt .lt[data-l="A"]{background:var(--cA);color:#fff}
+.opt .lt[data-l="B"]{background:var(--cB);color:#fff}
+.opt .lt[data-l="C"]{background:var(--cC);color:#fff}
+.opt .lt[data-l="D"]{background:var(--cD);color:#fff}
+.opt .lt[data-l="B"]{border-radius:0;width:54px;height:50px;padding-top:14px;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.opt .lt[data-l="C"]{border-radius:6px}
+.opt .lt[data-l="D"]{border-radius:0;width:54px;height:54px;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.opt.correct::after{content:"Bonne réponse";margin-left:auto;padding-left:10px;font-size:.85rem;font-weight:700;color:var(--ok);white-space:nowrap}
+.countdown{font-family:var(--font-display);font-weight:700;font-size:clamp(4rem,12vw,9rem);line-height:1;text-align:center;margin:16px 0 0;color:var(--gold)}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 20%,var(--panel-2))}
+
+.feedback{margin-top:20px;padding:16px 20px;border-radius:12px;font-size:1.15rem;max-width:70ch;border:2px solid}
+.feedback.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.feedback.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+
+/* Choix d'un joueur */
+.grid-players{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:22px}
+.pl{font:inherit;font-size:1.1rem;font-weight:700;padding:14px 10px;border-radius:12px;background:var(--panel-2);border:2px solid var(--line);color:var(--text);cursor:pointer;overflow-wrap:anywhere}
+.pl:hover{border-color:var(--line-strong)}
+.pl[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 30%,var(--panel-2))}
+.pl .tag{display:block;font-size:.75rem;font-weight:400;color:var(--muted)}
+
+/* Cartes de rôle */
+.rolecard{--role:var(--gold);display:flex;gap:26px;align-items:center;padding:26px 30px;border-radius:18px;border:3px solid var(--role);background:color-mix(in srgb,var(--role) 12%,var(--panel-2));max-width:700px;margin-top:20px}
+.rolecard svg{width:110px;height:110px;flex:none;color:var(--role)}
+.rolecard h2{font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,4vw,3.2rem);margin:0;line-height:1;color:var(--role)}
+.rolecard p{margin:10px 0 0;font-size:1.15rem}
+.rolecard .goal{color:var(--muted);font-size:1rem}
+@media (max-width:560px){.rolecard{flex-direction:column;align-items:flex-start}}
+
+.debate{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:22px}
+.clock{font-size:3rem;font-weight:700;font-variant-numeric:tabular-nums;min-width:4ch}
+.clock.out{color:var(--bad)}
+
+/* Panneau du village */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;position:sticky;top:16px}
+.panel h2{font-family:var(--font-display);font-weight:700;font-size:1.9rem;margin:0 0 12px;line-height:1}
+.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.count{background:var(--panel-2);border-radius:10px;padding:8px 6px;text-align:center;font-size:.78rem;color:var(--muted);line-height:1.2}
+.count b{display:block;font-size:1.55rem;color:var(--text);font-variant-numeric:tabular-nums;margin-bottom:2px}
+.vlist{list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:4px;max-height:58vh;overflow:auto}
+.vlist li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:var(--panel-2);font-size:.98rem}
+.vlist li.dead .nm{text-decoration:line-through;color:var(--muted)}
+.vtag{font-size:.74rem;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap;border:1px solid var(--line-strong);color:var(--muted)}
+.vtag.loup{background:var(--accent);border-color:var(--accent);color:#fff}
+.vtag.inno{border-color:var(--ok);color:var(--ok)}
+
+/* Réglages */
+.setup-intro{max-width:70ch;font-size:1.1rem;margin:0 0 6px}
+.setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-top:22px}
+.box{background:var(--panel-2);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.box h3{margin:0;font-size:1.15rem}
+.box .hint{margin:0;color:var(--muted);font-size:.92rem}
+textarea,input[type="number"],select{font:inherit;color:var(--text);background:var(--ink);border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px}
+textarea{width:100%;min-height:210px;resize:vertical;line-height:1.35}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input[type="number"]{width:90px}
+.check{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.check input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);flex:none}
+.check small{display:block;color:var(--muted);font-size:.86rem}
+.sys-list{display:grid;grid-template-columns:1fr;gap:8px}
+.sys-list .check{align-items:center}
+.sys-n{margin-left:auto;color:var(--muted);font-size:.85rem;font-variant-numeric:tabular-nums}
+.howto{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.err{color:var(--bad);font-weight:700;margin:16px 0 0}
+details summary{cursor:pointer;font-weight:700}
+code{background:var(--ink);padding:2px 6px;border-radius:6px;font-size:.88em}
+
+/* Fin */
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:24px}
+.statrow{display:grid;grid-template-columns:minmax(0,1fr) 120px 52px;gap:10px;align-items:center;font-size:.98rem}
+.bar{height:10px;background:var(--ink);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.statrow .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.allroles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px}
+.allroles div{display:flex;justify-content:space-between;gap:6px;background:var(--panel-2);border-radius:8px;padding:6px 10px;font-size:.95rem}
+
+/* Fenêtre superposée */
+.overlay{position:fixed;inset:0;background:rgba(5,8,24,.72);display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;z-index:10;overflow:auto}
+.overlay.open{display:flex}
+.modal{background:var(--panel);color:var(--text);border:1px solid var(--line-strong);border-radius:18px;padding:28px;max-width:640px;width:100%}
+.modal h2{font-family:var(--font-display);font-size:2.2rem;margin:0 0 10px;line-height:1}
+.modal textarea{min-height:260px;font-size:.95rem}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body data-mood="night" class="no-panel">
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="app">
+  <header class="top">
+    <p class="brand">Loup-garou du corps humain<small>Village de Sainte-Cellule</small></p>
+    <span class="pill" id="phase"><span class="dot"></span><span id="phaseTxt">Préparation</span></span>
+    <div class="top-actions">
+      <button type="button" class="mini" id="fsBtn">Plein écran</button>
+      <button type="button" class="mini" id="newBtn">Nouvelle partie</button>
+    </div>
+  </header>
+  <main class="layout">
+    <section class="stage" id="stage" aria-live="polite"></section>
+    <aside class="panel" id="village" aria-label="Le village"></aside>
+  </main>
+</div>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true"><div class="modal" id="modal"></div></div>
+
+<script>
+/* ---------- Banque de questions (Secondaire 3, L'être humain) ---------- */
+const SYS = {
+  dig:{nom:"Système digestif", c:"#eaa24c"},
+  res:{nom:"Système respiratoire", c:"#71c6e2"},
+  cir:{nom:"Système circulatoire", c:"#ee7482"},
+  lym:{nom:"Système lymphatique et immunité", c:"#9fdc7e"},
+  exc:{nom:"Système excréteur", c:"#e9d460"},
+  ner:{nom:"Système nerveux et sens", c:"#b993f2"},
+  mus:{nom:"Système musculosquelettique", c:"#f2a0b9"},
+  rep:{nom:"Système reproducteur", c:"#7fd3c3"},
+  perso:{nom:"Mes questions", c:"#c9cbd6"}
+};
+const RAW = [
+["dig","Dans quelle partie du tube digestif commence la digestion chimique de l'amidon ?","La bouche","L'estomac","L'intestin grêle","Le gros intestin","La salive contient de l'amylase, une enzyme qui commence à transformer l'amidon dès la bouche."],
+["dig","Dans quel organe se fait la plus grande partie de l'absorption des nutriments ?","L'intestin grêle","L'estomac","Le gros intestin","L'œsophage","Les villosités de l'intestin grêle offrent une immense surface d'échange avec le sang."],
+["dig","Quel organe produit la bile ?","Le foie","La vésicule biliaire","Le pancréas","L'estomac","Le foie produit la bile. La vésicule biliaire ne fait que l'entreposer avant de la libérer dans le duodénum."],
+["dig","Quel est le rôle principal du gros intestin ?","Absorber l'eau et former les selles","Digérer les protéines","Produire la bile","Absorber la majorité des nutriments","Quand les résidus arrivent au gros intestin, la plupart des nutriments ont déjà été absorbés."],
+["dig","Comment s'appellent les contractions qui font avancer les aliments dans le tube digestif ?","Le péristaltisme","La mastication","L'absorption","La déglutition","Les muscles lisses du tube digestif se contractent en vagues. La déglutition, c'est l'action d'avaler."],
+["dig","La mastication est un exemple de…","Transformation mécanique des aliments","Transformation chimique des aliments","Absorption des nutriments","Élimination des déchets","Les dents coupent et broient les aliments sans changer leur nature chimique."],
+["dig","Quel conduit amène les aliments du pharynx jusqu'à l'estomac ?","L'œsophage","La trachée","Le duodénum","Le larynx","La trachée, elle, conduit l'air vers les poumons."],
+["dig","En quoi les protéines sont-elles transformées lors de la digestion ?","En acides aminés","En glucose","En acides gras et glycérol","En minéraux","Le glucose provient des glucides; les acides gras et le glycérol proviennent des lipides."],
+["dig","Quelle glande déverse dans le duodénum un suc qui agit sur les glucides, les lipides et les protéines ?","Le pancréas","Les glandes salivaires","Les glandes gastriques","La vésicule biliaire","Le suc pancréatique contient plusieurs enzymes qui agissent sur les trois grands types de nutriments."],
+["dig","Quel acide fait partie du suc gastrique ?","L'acide chlorhydrique","L'acide citrique","L'acide lactique","L'acide acétique","L'acide chlorhydrique de l'estomac aide à digérer les protéines et détruit plusieurs microbes."],
+["dig","Quelle partie du corps est commune au système digestif et au système respiratoire ?","Le pharynx","Le larynx","L'œsophage","La trachée","L'air et les aliments passent tous deux par le pharynx. L'épiglotte dirige ensuite les aliments vers l'œsophage."],
+
+["res","Où se font les échanges gazeux entre l'air et le sang ?","Dans les alvéoles pulmonaires","Dans la trachée","Dans les bronches","Dans le larynx","Les alvéoles ont des parois très minces entourées de capillaires sanguins."],
+["res","Dans les poumons, quel gaz passe des alvéoles vers le sang ?","Le dioxygène (O₂)","Le dioxyde de carbone (CO₂)","Le diazote (N₂)","La vapeur d'eau","Le CO₂ fait le trajet inverse : du sang vers les alvéoles, puis il est expiré."],
+["res","Quel muscle joue le rôle principal dans la respiration ?","Le diaphragme","Le muscle cardiaque","Les abdominaux","Le biceps","Le diaphragme est un muscle en forme de dôme situé sous les poumons."],
+["res","Pendant l'inspiration, que fait le diaphragme ?","Il se contracte et s'abaisse","Il se relâche et remonte","Il se contracte et remonte","Il ne bouge pas","En s'abaissant, il augmente le volume de la cage thoracique. La pression baisse et l'air entre."],
+["res","Quelle structure empêche les aliments d'entrer dans la trachée quand on avale ?","L'épiglotte","La luette","Le larynx","Les cordes vocales","L'épiglotte se rabat sur le larynx comme un couvercle au moment d'avaler."],
+["res","Quel est le bon ordre du trajet de l'air inspiré ?","Fosses nasales → pharynx → larynx → trachée → bronches","Fosses nasales → larynx → pharynx → bronches → trachée","Pharynx → fosses nasales → trachée → larynx → bronches","Fosses nasales → trachée → pharynx → larynx → bronches","Après les bronches viennent les bronchioles, puis les alvéoles."],
+["res","Dans quelle structure se trouvent les cordes vocales ?","Le larynx","Le pharynx","La trachée","Les bronches","L'air expiré fait vibrer les cordes vocales du larynx : c'est ce qui produit la voix."],
+["res","À quoi servent le mucus et les cils des voies respiratoires ?","À retenir et évacuer les poussières et les microbes","À réchauffer le sang","À produire du dioxygène","À faire vibrer les cordes vocales","Les cils poussent le mucus et ce qu'il a capturé vers le pharynx, loin des poumons."],
+["res","Pourquoi vaut-il mieux respirer par le nez que par la bouche ?","Le nez filtre, réchauffe et humidifie l'air","Le nez absorbe directement le dioxygène","Le nez retire le CO₂ de l'air","L'air passe plus vite par le nez","Les poils, le mucus et les vaisseaux sanguins des fosses nasales préparent l'air avant qu'il n'atteigne les poumons."],
+["res","Pendant l'expiration, qu'arrive-t-il au volume de la cage thoracique ?","Il diminue, ce qui pousse l'air vers l'extérieur","Il augmente, ce qui pousse l'air vers l'extérieur","Il reste le même","Il augmente, ce qui fait entrer l'air","Le volume diminue, la pression dans les poumons augmente et l'air sort."],
+
+["cir","Combien de cavités le cœur humain possède-t-il ?","4","2","3","6","Deux oreillettes en haut et deux ventricules en bas."],
+["cir","Quels vaisseaux transportent le sang du cœur vers les organes ?","Les artères","Les veines","Les capillaires","Les vaisseaux lymphatiques","Les veines font le chemin inverse : elles ramènent le sang vers le cœur."],
+["cir","Dans quels vaisseaux se font les échanges entre le sang et les cellules ?","Les capillaires","Les artères","Les veines","L'aorte","La paroi des capillaires n'a qu'une seule couche de cellules, ce qui permet les échanges."],
+["cir","Quels éléments du sang transportent le dioxygène ?","Les globules rouges","Les globules blancs","Les plaquettes","Les anticorps","Les globules rouges contiennent de l'hémoglobine, une protéine qui fixe le dioxygène."],
+["cir","Quel est le rôle des plaquettes ?","Participer à la coagulation du sang","Transporter le dioxygène","Produire des anticorps","Transporter les nutriments","Les plaquettes forment un bouchon qui aide à arrêter un saignement."],
+["cir","De quoi le plasma est-il surtout composé ?","D'eau","De globules rouges","De protéines","De gras","Le plasma contient environ 90 % d'eau dans laquelle sont dissous nutriments, déchets, hormones, etc."],
+["cir","La circulation pulmonaire fait circuler le sang entre le cœur et…","les poumons","le cerveau","les reins","les intestins","La circulation systémique, elle, relie le cœur à tous les autres organes."],
+["cir","Quel côté du cœur contient du sang pauvre en dioxygène ?","Le côté droit","Le côté gauche","Les deux côtés","Aucun des deux","Le côté droit reçoit le sang du corps et l'envoie aux poumons. Le côté gauche reçoit le sang oxygéné des poumons."],
+["cir","Quel groupe sanguin est appelé donneur universel ?","O−","AB+","A+","B−","Ses globules rouges n'ont ni antigène A, ni B, ni Rh. Le groupe AB+ est le receveur universel."],
+["cir","Quelle grosse artère sort du ventricule gauche ?","L'aorte","L'artère pulmonaire","La veine cave","La veine pulmonaire","L'artère pulmonaire sort du ventricule droit et mène aux poumons."],
+["cir","À quoi servent les valvules du cœur ?","À empêcher le sang de refluer","À produire les battements","À filtrer le sang","À fabriquer les globules rouges","Les valvules s'ouvrent dans un seul sens : le sang avance toujours dans la même direction."],
+
+["lym","Quel est le rôle des ganglions lymphatiques ?","Filtrer la lymphe et combattre les microbes","Produire la bile","Pomper la lymphe comme un cœur","Fabriquer l'urine","Ils contiennent beaucoup de globules blancs. Ils enflent souvent quand on combat une infection."],
+["lym","D'où provient la lymphe ?","Du liquide qui sort des capillaires et baigne les cellules","Des reins","De la moelle épinière","De l'estomac","Ce liquide, récupéré par les vaisseaux lymphatiques, devient la lymphe."],
+["lym","Où la lymphe retourne-t-elle à la fin de son trajet ?","Dans le sang, par des veines près du cœur","Dans la vessie","Dans l'intestin grêle","Dans les poumons","Elle rejoint la circulation sanguine dans de grosses veines situées près du cœur."],
+["lym","Comment appelle-t-on une substance étrangère qui déclenche une réaction du système immunitaire ?","Un antigène","Un anticorps","Une enzyme","Une hormone","L'anticorps est la protéine que le corps fabrique pour neutraliser l'antigène."],
+["lym","Quelles cellules produisent les anticorps ?","Certains lymphocytes (globules blancs)","Les globules rouges","Les plaquettes","Les neurones","Les lymphocytes sont des globules blancs qui circulent dans le sang et la lymphe."],
+["lym","Comment agit un vaccin ?","Il amène le corps à fabriquer ses propres anticorps","Il contient des anticorps déjà fabriqués","Il tue directement tous les microbes du corps","Il remplace les globules blancs","Le corps « se souvient » ensuite du microbe : la protection dure longtemps."],
+["lym","Quelle est la différence entre un sérum et un vaccin ?","Le sérum fournit des anticorps déjà prêts : effet rapide mais temporaire","Le sérum est simplement un vaccin plus fort","Le sérum agit seulement après plusieurs semaines","Le sérum ne contient que de l'eau salée","Le vaccin prend plus de temps à agir, mais il protège beaucoup plus longtemps."],
+["lym","Lequel de ces organes fait partie du système lymphatique ?","La rate","Le pancréas","La vessie","Le foie","La rate, le thymus, les amygdales et les ganglions font partie du système lymphatique."],
+["lym","Quel liquide circule dans les vaisseaux lymphatiques ?","La lymphe","Le sang","L'urine","La bile","La lymphe est un liquide clair qui contient beaucoup de globules blancs."],
+["lym","Un même anticorps est-il efficace contre n'importe quel microbe ?","Non, chaque anticorps est spécifique à un antigène","Oui, un anticorps attaque tous les microbes","Oui, mais seulement contre les virus","Non, les anticorps attaquent seulement les bactéries","C'est pourquoi il faut un vaccin différent pour chaque maladie."],
+
+["exc","Quel organe filtre le sang pour fabriquer l'urine ?","Les reins","La vessie","Le foie","Les uretères","La vessie ne fait qu'entreposer l'urine avant son évacuation."],
+["exc","Comment s'appelle l'unité de filtration du rein ?","Le néphron","Le neurone","L'alvéole","La villosité","Chaque rein contient environ un million de néphrons."],
+["exc","Quel conduit transporte l'urine du rein jusqu'à la vessie ?","L'uretère","L'urètre","L'œsophage","L'aorte","Attention aux mots semblables : l'urètre, lui, fait sortir l'urine de la vessie."],
+["exc","Quel conduit évacue l'urine de la vessie hors du corps ?","L'urètre","L'uretère","Le rectum","Le néphron","Il y a deux uretères (un par rein), mais un seul urètre."],
+["exc","Quel est le principal déchet azoté contenu dans l'urine ?","L'urée","Le glucose","Le dioxyde de carbone","Les globules rouges","L'urée provient de la dégradation des protéines."],
+["exc","Lequel de ces organes n'est PAS un organe d'excrétion ?","L'estomac","Les reins","Les poumons","La peau","Les poumons rejettent le CO₂ et la peau rejette la sueur : ce sont aussi des organes d'excrétion."],
+["exc","Quel déchet est rejeté par les poumons ?","Le dioxyde de carbone (CO₂)","L'urée","Le dioxygène (O₂)","La bile","Le CO₂ est produit par les cellules lors de la respiration cellulaire."],
+["exc","De quoi l'urine est-elle composée en majorité ?","D'eau","D'urée","De sels minéraux","De sang","L'urine contient environ 95 % d'eau."],
+["exc","Quelles glandes de la peau produisent la sueur ?","Les glandes sudoripares","Les glandes sébacées","Les glandes salivaires","Les glandes gastriques","Les glandes sébacées produisent le sébum, le gras de la peau."],
+["exc","Une personne qui ne boit pas assez d'eau produira une urine…","plus foncée et plus concentrée","plus claire et plus abondante","exactement pareille","qui contient du sang","Les reins retiennent l'eau pour limiter la déshydratation."],
+
+["ner","De quoi est composé le système nerveux central ?","L'encéphale et la moelle épinière","Les nerfs et les muscles","L'encéphale et les nerfs","La moelle épinière et les organes des sens","Les nerfs font partie du système nerveux périphérique."],
+["ner","Quelle est la cellule de base du système nerveux ?","Le neurone","Le néphron","Le globule blanc","La fibre musculaire","Le néphron est l'unité de filtration du rein : attention à la ressemblance !"],
+["ner","Quelle partie du neurone reçoit l'influx nerveux ?","Les dendrites","L'axone","Les terminaisons de l'axone","Le noyau","L'influx va des dendrites vers le corps cellulaire, puis le long de l'axone."],
+["ner","Comment s'appelle la zone de communication entre deux neurones ?","La synapse","La dendrite","Le nerf","Le ganglion","À la synapse, le message passe d'un neurone à l'autre grâce à des substances chimiques."],
+["ner","Lors d'un réflexe (retirer sa main d'un objet brûlant), quelle structure traite le message ?","La moelle épinière","Le cerveau","Le cervelet","Le bulbe rachidien","Le message ne fait pas le détour par le cerveau : la réaction est donc très rapide."],
+["ner","Quelle partie de l'encéphale coordonne les mouvements et l'équilibre ?","Le cervelet","Le cerveau","Le bulbe rachidien","La moelle épinière","Le cervelet est situé à l'arrière, sous le cerveau."],
+["ner","Quelle partie de l'encéphale contrôle la respiration et les battements du cœur ?","Le bulbe rachidien","Le cervelet","Le cerveau","La moelle épinière","Le bulbe rachidien gère plusieurs fonctions vitales involontaires."],
+["ner","Quels nerfs transmettent les messages des récepteurs sensoriels vers le système nerveux central ?","Les nerfs sensitifs","Les nerfs moteurs","Les vaisseaux lymphatiques","Les tendons","Les nerfs moteurs font le chemin inverse, vers les muscles."],
+["ner","Dans l'œil, où se trouvent les cellules sensibles à la lumière ?","Dans la rétine","Dans l'iris","Dans le cristallin","Dans la cornée","La rétine tapisse le fond de l'œil; le cristallin, lui, fait la mise au point."],
+["ner","Quel est le rôle de l'iris ?","Régler la quantité de lumière qui entre dans l'œil","Former l'image sur la rétine","Transmettre l'image au cerveau","Protéger l'œil des poussières","L'iris est la partie colorée : il agrandit ou rétrécit la pupille."],
+["ner","Quelle partie de l'oreille contient les récepteurs de l'équilibre ?","Les canaux semi-circulaires","Le tympan","Le pavillon","Les osselets","Ils se trouvent dans l'oreille interne, tout près de la cochlée (l'ouïe)."],
+["ner","Quel nerf transmet au cerveau les messages captés par l'œil ?","Le nerf optique","Le nerf auditif","Le nerf olfactif","La moelle épinière","C'est le cerveau qui interprète ensuite ce message pour former une image."],
+
+["mus","Combien d'os compte environ le squelette d'un adulte ?","206","106","306","650","Un bébé en a davantage : certains os se soudent pendant la croissance."],
+["mus","Quelle structure relie un muscle à un os ?","Un tendon","Un ligament","Un cartilage","Un nerf","Le tendon d'Achille, par exemple, relie le mollet à l'os du talon."],
+["mus","Quelle structure relie deux os entre eux dans une articulation ?","Un ligament","Un tendon","Un muscle","Un vaisseau sanguin","Truc : ligament relie l'os à l'os, tendon relie le muscle à l'os."],
+["mus","Quel type de muscle forme la paroi de l'estomac et des vaisseaux sanguins ?","Le muscle lisse","Le muscle squelettique","Le muscle cardiaque","Le tendon","Les muscles lisses sont involontaires : on ne peut pas les contrôler."],
+["mus","Le biceps et le triceps travaillent de façon opposée. Comment appelle-t-on ces muscles ?","Des muscles antagonistes","Des muscles lisses","Des muscles cardiaques","Des muscles involontaires","Quand l'un se contracte, l'autre se relâche."],
+["mus","Que fait le biceps quand on plie le bras ?","Il se contracte","Il se relâche","Il pousse l'avant-bras vers le haut","Il ne participe pas","Un muscle peut seulement tirer sur un os, jamais le pousser."],
+["mus","Quel tissu recouvre le bout des os dans une articulation mobile pour réduire la friction ?","Le cartilage","Le tendon","La moelle rouge","Le muscle","Le cartilage est lisse et souple, ce qui permet aux os de glisser l'un sur l'autre."],
+["mus","Où sont fabriquées les cellules sanguines ?","Dans la moelle rouge des os","Dans le cœur","Dans le foie","Dans la moelle épinière","La moelle épinière fait partie du système nerveux : rien à voir avec la moelle des os."],
+["mus","Les os du crâne d'un adulte sont reliés par des articulations…","immobiles","très mobiles","semi-mobiles, comme les vertèbres","en forme de charnière","Ces articulations immobiles s'appellent des sutures."],
+["mus","Quel minéral rend les os durs et solides ?","Le calcium","Le fer","Le sodium","Le potassium","On trouve du calcium dans les produits laitiers, les amandes, le brocoli, etc."],
+["mus","Quel type de muscle est volontaire ?","Le muscle squelettique","Le muscle lisse","Le muscle cardiaque","Aucun muscle n'est volontaire","On choisit de contracter nos muscles squelettiques, contrairement au cœur ou à l'estomac."],
+
+["rep","Où sont produits les spermatozoïdes ?","Dans les testicules","Dans la prostate","Dans la vessie","Dans les canaux déférents","La prostate produit une partie du liquide du sperme, mais pas les spermatozoïdes."],
+["rep","Quel organe produit les ovules ?","Les ovaires","L'utérus","Les trompes utérines","Le vagin","Habituellement, un ovule est libéré par un ovaire à chaque cycle."],
+["rep","Où a habituellement lieu la fécondation ?","Dans une trompe utérine","Dans l'utérus","Dans l'ovaire","Dans le vagin","L'embryon descend ensuite vers l'utérus pour s'y implanter."],
+["rep","Quelle est la durée moyenne d'un cycle menstruel ?","Environ 28 jours","Environ 7 jours","Environ 14 jours","Environ 3 mois","La durée varie d'une personne à l'autre."],
+["rep","Dans un cycle de 28 jours, vers quel jour l'ovulation a-t-elle lieu en général ?","Vers le 14e jour","Le 1er jour","Vers le 7e jour","Le 28e jour","Le 1er jour du cycle correspond au début des menstruations."],
+["rep","Quelle est la principale hormone sexuelle produite par les testicules ?","La testostérone","L'œstrogène","L'insuline","L'adrénaline","Les œstrogènes sont surtout produits par les ovaires."],
+["rep","Quel organe permet les échanges entre la mère et le fœtus ?","Le placenta","Le cordon ombilical","L'ovaire","Le col de l'utérus","Le cordon ombilical relie le fœtus au placenta, où se font les échanges."],
+["rep","Combien de chromosomes un gamète humain contient-il ?","23","46","22","92","Les autres cellules du corps en ont 46 : la fécondation réunit 23 + 23."],
+["rep","Quelle méthode protège à la fois contre une grossesse et contre les ITSS ?","Le condom","La pilule contraceptive","Le stérilet","La contraception orale d'urgence","Le condom est la seule de ces méthodes qui forme une barrière contre les ITSS."],
+["rep","Dans quel organe l'embryon se développe-t-il ?","L'utérus","L'ovaire","La trompe utérine","Le placenta","L'embryon s'implante dans la paroi de l'utérus."]
+];
+const QBANK = RAW.map(r => ({s:r[0], q:r[1], a:r[2], w:[r[3],r[4],r[5]], e:r[6]}));
+
+/* ---------- Rôles ---------- */
+const ICON = {
+  loup:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M10 6l12 14h20L54 6l-3 26-7 12-12 14-12-14-7-12z"/><path d="M22 32l6 3M42 32l-6 3"/><path d="M28 47l4 4 4-4"/></svg>',
+  voyante:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M4 32s11-17 28-17 28 17 28 17-11 17-28 17S4 32 4 32z"/><circle cx="32" cy="32" r="8"/><circle cx="32" cy="32" r="2.5" fill="currentColor"/></svg>',
+  medecin:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M24 6h16v18h18v16H40v18H24V40H6V24h18z"/></svg>',
+  villageois:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M8 30L32 8l24 22v26H8z"/><path d="M26 56V40h12v16"/></svg>'
+};
+const ROLES = {
+  loup:{nom:"Loup-garou", c:"#e1485f", desc:"Chaque nuit, avec les autres loups, tu choisis une victime en silence. Le jour, fais-toi passer pour un simple villageois.", goal:"Tu gagnes quand les loups sont aussi nombreux que les villageois."},
+  voyante:{nom:"Voyante", c:"#f0b35a", desc:"Chaque nuit, réponds à une question pour découvrir le rôle d'un joueur de ton choix.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés."},
+  medecin:{nom:"Médecin", c:"#43b981", desc:"Chaque nuit, tu protèges une personne contre l'attaque des loups. Jamais la même deux nuits de suite.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés."},
+  villageois:{nom:"Villageois", c:"#86a9e6", desc:"Tu n'as pas de pouvoir spécial : tes connaissances et ton flair sont tes armes. Démasque les loups pendant le débat.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés."}
+};
+
+/* ---------- Utilitaires ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+const autoWolves = n => Math.max(1, Math.round(n / 6));
+
+const DEFAULTS = {wolves:"auto", voyante:true, medecin:true, qVictim:true, qDefense:true, qVillage:true, qSeer:true, answerMode:"card", timer:30, systems:["dig","res","cir","lym","exc","ner","mus","rep","perso"]};
+let settings = Object.assign({}, DEFAULTS, store.get("lg-settings2", {}));
+let namesText = store.get("lg-names", "");
+let customText = store.get("lg-custom", "");
+let customQs = parseCustom(customText).out;
+
+function parseCustom(text){
+  const out = [], bad = [];
+  String(text || "").split("\n").forEach((l, i) => {
+    l = l.trim(); if (!l) return;
+    const f = l.split("|").map(x => x.trim());
+    if (f.length < 5 || f.slice(0, 5).some(x => !x)) { bad.push(i + 1); return; }
+    out.push({s:"perso", q:f[0], a:f[1], w:[f[2], f[3], f[4]], e:f[5] || ""});
+  });
+  return {out, bad};
+}
+function poolFor(systems){ return QBANK.concat(customQs).filter(q => systems.includes(q.s)); }
+
+/* ---------- Rendu ---------- */
+const stage = $("#stage");
+let handlers = {}, timers = [];
+function clearTimers(){ timers.forEach(clearInterval); timers = []; }
+function render(html, h = {}){
+  clearTimers();
+  stage.innerHTML = html;
+  handlers = h;
+  window.scrollTo({top:0});
+  renderVillage();
+}
+stage.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]");
+  if (!b || b.disabled || !stage.contains(b)) return;
+  const fn = handlers[b.dataset.act];
+  if (fn) fn(b.dataset.arg, b);
+});
+function scr({kicker = "", title = "", script = "", body = "", actions = ""}){
+  return (kicker ? `<div class="kicker">${kicker}</div>` : "") +
+    (title ? `<h1 class="title">${title}</h1>` : "") +
+    (script ? `<p class="script"><span class="lbl">À lire à voix haute</span>${script}</p>` : "") +
+    body + (actions ? `<div class="actions">${actions}</div>` : "");
+}
+const btn = (act, label, cls = "", arg) => `<button type="button" class="btn ${cls}" data-act="${act}"${arg !== undefined ? ` data-arg="${esc(arg)}"` : ""}>${label}</button>`;
+function roleCard(role){
+  const r = ROLES[role];
+  return `<div class="rolecard" style="--role:${r.c}">${ICON[role]}<div><h2>${r.nom}</h2><p>${r.desc}</p><p class="goal">${r.goal}</p></div></div>`;
+}
+function setMood(m, label){
+  document.body.dataset.mood = m;
+  $("#phaseTxt").textContent = label;
+}
+
+/* ---------- Ciel étoilé ---------- */
+const sky = $("#sky");
+function drawSky(){
+  const dpr = window.devicePixelRatio || 1, w = innerWidth, h = innerHeight;
+  sky.width = w * dpr; sky.height = h * dpr;
+  const c = sky.getContext && sky.getContext("2d"); if (!c) return; c.scale(dpr, dpr);
+  const g = c.createRadialGradient(w * .85, h * .08, 0, w * .85, h * .08, Math.max(w, h) * .7);
+  g.addColorStop(0, "rgba(240,179,90,.10)"); g.addColorStop(1, "rgba(14,19,48,0)");
+  c.fillStyle = g; c.fillRect(0, 0, w, h);
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < Math.round(w * h / 9000); i++) {
+    c.globalAlpha = .25 + rnd() * .6; c.fillStyle = "#ede7d0";
+    c.beginPath(); c.arc(rnd() * w, rnd() * h, rnd() * 1.3 + .2, 0, Math.PI * 2); c.fill();
+  }
+  c.globalAlpha = 1;
+}
+drawSky(); addEventListener("resize", drawSky);
+
+/* ---------- Fenêtre superposée ---------- */
+let ovHandlers = {};
+function modal(html, h){ $("#modal").innerHTML = html; ovHandlers = h || {}; $("#overlay").classList.add("open"); const f = $("#modal").querySelector("button"); if (f) f.focus(); }
+function closeModal(){ $("#overlay").classList.remove("open"); }
+$("#overlay").addEventListener("click", e => {
+  if (e.target.id === "overlay") return closeModal();
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const fn = ovHandlers[b.dataset.act]; if (fn) fn(b);
+});
+addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+$("#fsBtn").addEventListener("click", () => {
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  } catch(e){}
+});
+$("#newBtn").addEventListener("click", () => {
+  if (!S || S.phase === "setup") return setup();
+  modal(`<h2>Nouvelle partie ?</h2><p>La partie en cours sera abandonnée et vous reviendrez aux réglages.</p><div class="actions">${btn("yes","Abandonner et revenir aux réglages")}${btn("no","Continuer la partie","ghost")}</div>`,
+    {yes: () => { closeModal(); setup(); }, no: closeModal});
+});
+
+/* ---------- État de jeu ---------- */
+let S = null;
+
+function renderVillage(){
+  const el = $("#village");
+  if (!S || S.phase === "setup") { document.body.classList.add("no-panel"); el.innerHTML = ""; return; }
+  document.body.classList.remove("no-panel");
+  const alive = S.players.filter(p => p.alive).length;
+  const ok = Object.values(S.stats).reduce((a, s) => a + s.ok, 0);
+  const n = Object.values(S.stats).reduce((a, s) => a + s.n, 0);
+  const end = S.phase === "end";
+  el.innerHTML = `<h2>Le village</h2>
+    <div class="counts">
+      <div class="count"><b>${alive}</b>en vie</div>
+      <div class="count"><b>${S.nWolves}</b>loups au départ</div>
+      <div class="count"><b>${ok}/${n}</b>bonnes réponses</div>
+    </div>
+    <ul class="vlist">${S.players.map(p => {
+      let tag = "";
+      if (!p.alive || end) tag = `<span class="vtag ${p.role === "loup" ? "loup" : ""}">${ROLES[p.role].nom}</span>`;
+      else if (p.cleared) tag = `<span class="vtag inno">Innocent·e</span>`;
+      return `<li class="${p.alive ? "" : "dead"}"><span class="nm">${esc(p.name)}</span>${tag}</li>`;
+    }).join("")}</ul>`;
+}
+
+function record(s, ok){ const r = S.stats[s] || (S.stats[s] = {ok:0, n:0}); r.n++; if (ok) r.ok++; }
+function drawQ(){ if (!S.deck.length) S.deck = shuffle(poolFor(S.systems)); return S.deck.pop(); }
+const isAlive = role => S.players.some(p => p.alive && p.role === role);
+function checkWin(){
+  const w = S.players.filter(p => p.alive && p.role === "loup").length;
+  const o = S.players.filter(p => p.alive && p.role !== "loup").length;
+  if (w === 0) return "village";
+  if (w >= o) return "loups";
+  return null;
+}
+
+function newGame(names){
+  const n = names.length;
+  const nW = settings.wolves === "auto" ? autoWolves(n) : +settings.wolves;
+  let roles = Array(nW).fill("loup");
+  if (settings.voyante) roles.push("voyante");
+  if (settings.medecin) roles.push("medecin");
+  while (roles.length < n) roles.push("villageois");
+  roles = shuffle(roles);
+  S = {phase:"deal", names, players:names.map((name, i) => ({id:i, name, role:roles[i], alive:true, cleared:false})),
+       round:1, lastProtected:null, protectedTonight:null, victim:null, deck:[], stats:{}, nWolves:nW, systems:settings.systems.slice()};
+}
+
+/* ---------- Composants de jeu ---------- */
+/* Modes : "click"  = la voyante montre ses doigts, le meneur clique sa réponse (nuit, yeux fermés)
+           "judge"  = un joueur répond en secret au meneur, qui indique seulement bon / mauvais
+           "count"  = tout le village répond sur billet, le meneur entre le nombre de bonnes réponses */
+function askQuestion(o){
+  let q = drawQ();
+  let mode = o.mode || "judge";
+  const labels = ["A","B","C","D"];
+  let opts = shuffle([q.a].concat(q.w));
+  const show = () => {
+    const sys = SYS[q.s];
+    const optHtml = opts.map((t, i) => mode === "click"
+      ? `<button type="button" class="opt" data-act="pick" data-arg="${i}"><span class="lt" data-l="${labels[i]}">${labels[i]}</span><span>${esc(t)}</span></button>`
+      : `<div class="opt static"><span class="lt" data-l="${labels[i]}">${labels[i]}</span><span>${esc(t)}</span></div>`).join("");
+    const body = `<div class="q-head"><span class="chip" style="background:${sys.c}">${sys.nom}</span>${settings.timer ? `<span class="t-num" id="tnum">${settings.timer} s</span>` : ""}</div>
+      ${settings.timer ? `<div class="timer"><i id="tbar" style="width:100%"></i></div>` : ""}
+      <p class="q-text">${esc(q.q)}</p>
+      <div class="opts">${optHtml}</div>
+      <div id="fb"></div>`;
+    const reveal = (cls, head) => {
+      clearTimers();
+      stage.querySelectorAll(".opt").forEach((b, j) => {
+        if (b.tagName === "BUTTON") b.disabled = true;
+        if (opts[j] === q.a) b.classList.add("correct");
+      });
+      $("#fb").innerHTML = `<div class="feedback ${cls}"><strong>${head}</strong> ${esc(q.e || "")}</div>`;
+    };
+    const finish = (label, fn) => {
+      const act = stage.querySelector(".actions");
+      act.innerHTML = btn("cont", label);
+      handlers = {cont: fn};
+      act.querySelector("button").focus();
+      renderVillage();
+    };
+    const answerClick = i => {
+      const ok = i >= 0 && opts[i] === q.a;
+      record(q.s, ok);
+      reveal(ok ? "ok" : "bad", ok ? "Bonne réponse !" : (i < 0 ? "Pas de réponse." : "Mauvaise réponse."));
+      if (!ok && i >= 0) stage.querySelectorAll(".opt")[i].classList.add("wrong");
+      finish(o.continueLabel || "Continuer", () => o.onDone(ok));
+    };
+    const judge = ok => {
+      record(q.s, ok);
+      reveal(ok ? "ok" : "bad", ok ? "Bonne réponse !" : "Mauvaise réponse.");
+      finish(o.continueLabel || "Continuer", () => o.onDone(ok));
+    };
+    const countStep = () => {
+      const alive = S.players.filter(p => p.alive).length;
+      const need = Math.floor(alive / 2) + 1;
+      const L = labels[opts.indexOf(q.a)];
+      reveal("ok", `Bonne réponse : ${L}. Comptez les fiches ${L} levées.`);
+      $("#fb").insertAdjacentHTML("beforeend", `<div class="countbox">
+        <label for="cnt">Combien de fiches montrent la bonne réponse ?</label>
+        <div class="row"><button type="button" class="mini step" data-act="minus" aria-label="Retirer un">−</button>
+          <input type="number" id="cnt" min="0" max="${alive}" value="0" inputmode="numeric">
+          <button type="button" class="mini step" data-act="plus" aria-label="Ajouter un">+</button>
+          <span>sur ${alive} joueur${alive > 1 ? "s" : ""} en vie</span></div>
+        <p class="hint">Il faut au moins ${need} bonne${need > 1 ? "s" : ""} réponse${need > 1 ? "s" : ""} pour obtenir l'indice du laboratoire.</p></div>`);
+      const inp = $("#cnt");
+      const val = () => Math.min(alive, Math.max(0, parseInt(inp.value, 10) || 0));
+      finish(o.continueLabel || "Voir le résultat", () => {
+        const c = val();
+        const r = S.stats[q.s] || (S.stats[q.s] = {ok:0, n:0});
+        r.ok += c; r.n += alive;
+        o.onDone(c >= need, c, alive);
+      });
+      handlers.minus = () => { inp.value = Math.max(0, val() - 1); };
+      handlers.plus = () => { inp.value = Math.min(alive, val() + 1); };
+      inp.focus(); inp.select();
+    };
+    const sw = o.switchable ? btn("switch", mode === "click" ? "Répondre plutôt avec la fiche" : "Répondre plutôt à voix haute", "ghost") : "";
+    const acts = {
+      click: btn("none", "Pas de réponse", "ghost") + sw + btn("swap", "Changer de question", "ghost"),
+      judge: btn("good", "Bonne réponse") + btn("bad", "Mauvaise réponse ou aucune", "ghost") + sw + btn("swap", "Changer de question", "ghost"),
+      count: btn("ready", "3, 2, 1… fiches !") + btn("collect", "Fiches levées : afficher la réponse", "ghost") + btn("swap", "Changer de question", "ghost")
+    }[mode];
+    const script = o.scripts ? o.scripts[mode] : o.script;
+    render(scr({kicker:o.kicker, title:o.title, script, body, actions:acts}), {
+      pick: i => answerClick(+i), none: () => answerClick(-1),
+      good: () => judge(true), bad: () => judge(false),
+      collect: countStep,
+      ready: (a, b) => {
+        clearTimers(); b.disabled = true;
+        const fb = $("#fb"); let n = 3;
+        fb.innerHTML = `<p class="countdown" aria-live="assertive">3</p>`;
+        const iv = setInterval(() => {
+          n--;
+          const el = fb.querySelector(".countdown");
+          if (!el) return clearInterval(iv);
+          if (n > 0) el.textContent = n; else { el.textContent = "Fiches !"; clearInterval(iv); }
+        }, 900);
+        timers.push(iv);
+      },
+      swap: () => { q = drawQ(); opts = shuffle([q.a].concat(q.w)); show(); },
+      switch: () => { mode = mode === "click" ? "judge" : "click"; show(); }
+    });
+    if (settings.timer) {
+      let left = settings.timer;
+      const iv = setInterval(() => {
+        left--;
+        const bar = $("#tbar"), num = $("#tnum");
+        if (!bar) return clearInterval(iv);
+        bar.style.width = Math.max(0, left / settings.timer * 100) + "%";
+        num.textContent = left > 0 ? left + " s" : "Temps écoulé";
+        if (left <= 0) { num.classList.add("out"); clearInterval(iv); }
+      }, 1000);
+      timers.push(iv);
+    }
+  };
+  show();
+}
+
+function pickPlayer(o){
+  let sel = null;
+  const list = S.players.filter(p => p.alive && (!o.filter || o.filter(p)));
+  const body = (o.note ? `<p class="note">${o.note}</p>` : "") +
+    `<div class="grid-players">${list.map(p => `<button type="button" class="pl" data-act="sel" data-arg="${p.id}" aria-pressed="false">${esc(p.name)}${p.cleared ? '<span class="tag">innocent·e</span>' : ""}</button>`).join("")}</div>`;
+  render(scr({kicker:o.kicker, title:o.title, script:o.script, body,
+    actions: btn("ok", o.confirmLabel || "Confirmer") + (o.allowNone ? btn("nonep", o.noneLabel, "ghost") : "")}), {
+    sel: id => { sel = +id; stage.querySelectorAll(".pl").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.arg === id))); okBtn.disabled = false; },
+    ok: () => { if (sel !== null) o.onConfirm(S.players[sel]); },
+    nonep: () => o.onNone()
+  });
+  const okBtn = stage.querySelector('[data-act="ok"]');
+  okBtn.disabled = true;
+}
+
+function simple(kicker, title, script, label, next, body = ""){
+  render(scr({kicker, title, script, body, actions:btn("go", label)}), {go:next});
+}
+
+/* ---------- Distribution ---------- */
+function deal(i = 0){
+  S.phase = "deal"; setMood("night", "Distribution des rôles");
+  const total = S.players.length;
+  if (i >= total) {
+    return render(scr({kicker:"Distribution terminée", title:"Tout le monde connaît son rôle",
+      script:"Gardez votre rôle secret. Les loups-garous se découvriront entre eux pendant la première nuit.",
+      actions: btn("go", "Commencer la première nuit") + btn("list", "Liste du meneur", "ghost")}), {go:startNight, list:meneurList});
+  }
+  const p = S.players[i];
+  render(scr({kicker:`Distribution · ${i + 1} sur ${total}`, title:`Au tour de ${esc(p.name)}`,
+    script:`${esc(p.name)}, viens voir l'écran. Tout le monde regarde ailleurs !`,
+    body:`<p class="note">Vous préférez des cartes papier ? Ouvrez la liste du meneur, copiez-la dans un traitement de texte et imprimez-la, puis passez la distribution.</p>`,
+    actions: btn("see", "Voir mon rôle") + btn("list", "Liste du meneur", "ghost") + btn("skip", "Passer la distribution", "ghost")}), {
+    see: () => render(scr({kicker:`Distribution · ${i + 1} sur ${total}`, title:esc(p.name), body:roleCard(p.role),
+      actions: btn("next", "J'ai vu, cacher mon rôle")}), {next: () => deal(i + 1)}),
+    list: meneurList,
+    skip: () => deal(total)
+  });
+}
+function meneurList(){
+  const txt = S.players.map(p => `${p.name} : ${ROLES[p.role].nom}`).join("\n");
+  const show = () => modal(`<h2>Liste du meneur</h2><p>Chaque joueur avec son rôle. Pour fabriquer des cartes papier, copiez la liste dans Word ou Google Docs.</p>
+    <textarea id="mlist" readonly aria-label="Liste des rôles">${esc(txt)}</textarea>
+    <p class="note" id="copied" aria-live="polite"></p>
+    <div class="actions">${btn("copy", "Copier la liste")}${btn("close", "Fermer", "ghost")}</div>`, {
+      copy: () => {
+        const ta = $("#mlist");
+        const done = m => { $("#copied").textContent = m; };
+        try { navigator.clipboard.writeText(txt).then(() => done("Liste copiée."), () => { ta.select(); done("Copie bloquée : la liste est sélectionnée, faites Ctrl+C."); }); }
+        catch(e){ ta.select(); done("Copie bloquée : la liste est sélectionnée, faites Ctrl+C."); }
+      },
+      close: closeModal
+    });
+  modal(`<h2>Écran projeté ?</h2><p>La liste du meneur révèle tous les rôles. Coupez la projection avant de l'ouvrir.</p>
+    <div class="actions">${btn("go", "Afficher les rôles")}${btn("close", "Annuler", "ghost")}</div>`, {go:show, close:closeModal});
+}
+
+/* ---------- Nuit ---------- */
+function startNight(){
+  S.phase = "night"; S.protectedTonight = null; S.victim = null;
+  setMood("night", `Nuit ${S.round}`);
+  simple(`Nuit ${S.round}`, "Le village s'endort",
+    "La nuit tombe sur Sainte-Cellule. Tout le monde ferme les yeux et pose la tête sur son bureau.", "Continuer", nightDoctor);
+}
+function nightDoctor(){
+  if (!isAlive("medecin")) return nightSeer();
+  const k = `Nuit ${S.round} · Médecin`, last = S.lastProtected;
+  pickPlayer({kicker:k, title:"Le médecin se réveille",
+    script:"Médecin, ouvre les yeux. Qui veux-tu protéger cette nuit ? Pointe une personne.",
+    filter: p => p.id !== last,
+    note: last !== null && S.players[last].alive ? `${esc(S.players[last].name)} a été protégé·e la nuit dernière et ne peut pas l'être deux nuits de suite.` : "",
+    confirmLabel:"Protéger cette personne",
+    onConfirm: p => { S.protectedTonight = p.id; S.lastProtected = p.id; simple(k, "Le médecin se rendort", "Médecin, ferme les yeux.", "Continuer", nightSeer); }
+  });
+}
+function nightSeer(){
+  if (!isAlive("voyante")) return nightWolves();
+  const k = `Nuit ${S.round} · Voyante`;
+  const seer = S.players.find(p => p.alive && p.role === "voyante");
+  const pick = () => pickPlayer({kicker:k, title:"Qui veux-tu sonder ?",
+    script:"Voyante, pointe la personne dont tu veux connaître le rôle.",
+    filter: p => p.id !== seer.id, confirmLabel:"Révéler son rôle",
+    onConfirm: p => simple(k, esc(p.name), "Voyante, mémorise bien ce rôle, puis ferme les yeux.", "Continuer", nightWolves, roleCard(p.role))
+  });
+  if (!settings.qSeer) return simple(k, "La voyante se réveille", "Voyante, ouvre les yeux.", "Continuer", pick);
+  simple(k, "La voyante se réveille",
+    "Voyante, ouvre les yeux. Pour utiliser ton pouvoir, réponds à la question en me montrant ta fiche A, B, C ou D.",
+    "Afficher la question", () => askQuestion({mode:"click", kicker:k, title:"Question de la voyante",
+      onDone: ok => ok ? pick() : simple(k, "Vision brouillée", "Ta vision est brouillée cette nuit. Voyante, ferme les yeux.", "Continuer", nightWolves)}));
+}
+function nightWolves(){
+  const k = `Nuit ${S.round} · Loups-garous`;
+  pickPlayer({kicker:k, title:"Les loups-garous se réveillent",
+    script:"Loups-garous, ouvrez les yeux. Mettez-vous d'accord en silence et pointez votre victime.",
+    filter: p => p.role !== "loup", confirmLabel:"Attaquer cette personne",
+    onConfirm: p => { S.victim = p.id; simple(k, "Les loups se rendorment", "Loups-garous, fermez les yeux.", "Faire lever le jour", dawn); }
+  });
+}
+
+/* ---------- Jour ---------- */
+function dawn(){
+  S.phase = "day"; setMood("day", `Jour ${S.round}`);
+  const k = `Jour ${S.round}`;
+  const v = S.victim !== null ? S.players[S.victim] : null;
+  const intro = "Le soleil se lève sur Sainte-Cellule. Tout le monde ouvre les yeux.";
+  if (!v || S.victim === S.protectedTonight) {
+    return simple(k, "Personne n'est éliminé", `${intro} Les loups ont attaqué cette nuit, mais leur victime a été soignée à temps.`, "Continuer", afterDawn);
+  }
+  if (!settings.qVictim) return eliminate(v, afterDawn, k, `${intro} Les loups-garous ont attaqué pendant la nuit.`);
+  simple(k, `Les loups ont attaqué ${esc(v.name)}`,
+    `${intro} Cette nuit, les loups-garous ont attaqué ${esc(v.name)}. Une bonne réponse peut encore lui sauver la vie !`,
+    `Question de survie pour ${esc(v.name)}`, () => askQuestion({...solo(v), kicker:k, title:`Dernière chance pour ${esc(v.name)}`,
+      onDone: ok => ok
+        ? simple(k, `${esc(v.name)} survit !`, "Son système immunitaire a repoussé l'attaque. Les loups devront réessayer.", "Continuer", afterDawn)
+        : eliminate(v, afterDawn, k, "Les loups-garous ont eu le dessus.")}));
+}
+/* Question individuelle : à voix haute (le meneur clique la réponse dite ou pointée) ou par écrit (montrée au meneur seulement) */
+function solo(p){
+  const n = esc(p.name);
+  return {mode: settings.answerMode === "voice" ? "click" : "judge", switchable:true, scripts:{
+    click:`${n} répond à voix haute ou pointe sa réponse au tableau. Le reste du village garde le silence.`,
+    judge:`${n} choisit sa fiche (A, B, C ou D) et la montre seulement au meneur, sans la faire voir aux autres. Le reste du village garde le silence.`
+  }};
+}
+function eliminate(p, next, k, line){
+  p.alive = false;
+  render(scr({kicker:k, title:`${esc(p.name)} est éliminé·e`,
+    script:`${line} ${esc(p.name)} ne peut plus parler jusqu'à la fin de la partie. Son rôle était…`,
+    body:roleCard(p.role), actions:btn("go", "Continuer")}),
+    {go: () => { const w = checkWin(); if (w) endGame(w); else next(); }});
+}
+function afterDawn(){ settings.qVillage ? villageQuestion() : vote(); }
+function villageQuestion(){
+  const k = `Jour ${S.round} · Laboratoire`;
+  simple(k, "Question pour tout le village",
+    "Tous les joueurs en vie répondent en secret avec leurs fiches. Choisissez votre fiche sans la montrer. Au signal « 3, 2, 1… fiches ! », levez-la contre votre poitrine, tournée vers le meneur seulement. Si la majorité a la bonne réponse, le laboratoire innocente une personne.",
+    "Afficher la question", () => askQuestion({mode:"count", kicker:k, title:"Question du village",
+      script:"Choisissez votre fiche en silence et gardez-la cachée jusqu'au signal.", continueLabel:"Voir le résultat du laboratoire",
+      onDone: (ok, c, alive) => {
+        if (!ok) return simple(k, "Pas d'indice aujourd'hui", `Seulement ${c} bonne${c > 1 ? "s" : ""} réponse${c > 1 ? "s" : ""} sur ${alive}. Le laboratoire n'a rien trouvé : le village devra se fier à son flair.`, "Passer au débat", vote);
+        const cand = shuffle(S.players.filter(p => p.alive && p.role !== "loup" && !p.cleared));
+        if (!cand.length) return simple(k, "Aucun nouvel indice", "Tous les innocents encore en vie sont déjà connus.", "Passer au débat", vote);
+        cand[0].cleared = true;
+        simple(k, `${esc(cand[0].name)} est innocent·e`, `Bravo, ${c} bonnes réponses sur ${alive} ! Analyse de laboratoire : ${esc(cand[0].name)} n'est pas un loup-garou. Son rôle exact reste secret.`, "Passer au débat", vote);
+      }}));
+}
+function vote(){
+  const k = `Jour ${S.round} · Vote`;
+  const startPick = () => pickPlayer({kicker:k, title:"Qui le village accuse-t-il ?",
+    script:"Votez à main levée. Le meneur sélectionne la personne qui a reçu le plus de votes.",
+    confirmLabel:"Accuser cette personne", allowNone:true, noneLabel:"Personne aujourd'hui", onNone:endDay,
+    onConfirm: p => {
+      if (!settings.qDefense) return eliminate(p, endDay, k, "Le village a tranché.");
+      simple(k, `${esc(p.name)} est accusé·e`, `${esc(p.name)}, défends-toi ! Une bonne réponse te sauve.`,
+        "Question de défense", () => askQuestion({...solo(p), kicker:k, title:`Défense de ${esc(p.name)}`,
+          onDone: ok => ok
+            ? simple(k, `${esc(p.name)} est acquitté·e`, "Sa science a convaincu le village. Personne n'est éliminé aujourd'hui.", "Continuer", endDay)
+            : eliminate(p, endDay, k, "Le village a tranché.")}));
+    }});
+  render(scr({kicker:k, title:"Le village débat",
+    script:"Qui se cache parmi nous ? Discutez, accusez, défendez-vous. Les personnes éliminées restent silencieuses.",
+    body:`<div class="debate"><span id="dclock" class="clock">2:00</span>${btn("clock", "Lancer 2 minutes de débat", "ghost")}</div>`,
+    actions:btn("go", "Passer au vote")}), {
+    clock: (a, b) => {
+      clearTimers(); b.disabled = true;
+      let left = 120; const el = $("#dclock");
+      const iv = setInterval(() => {
+        left--;
+        if (!document.body.contains(el)) return clearInterval(iv);
+        el.textContent = left > 0 ? `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}` : "Temps écoulé";
+        if (left <= 0) { el.classList.add("out"); clearInterval(iv); }
+      }, 1000);
+      timers.push(iv);
+    },
+    go: startPick
+  });
+}
+function endDay(){ S.round++; startNight(); }
+
+/* ---------- Fin ---------- */
+function endGame(w){
+  S.phase = "end"; setMood("day", "Fin de la partie");
+  const village = w === "village";
+  const rows = Object.keys(SYS).filter(s => S.stats[s]).map(s => {
+    const r = S.stats[s], pct = Math.round(r.ok / r.n * 100);
+    return `<div class="statrow"><span><span class="chip" style="background:${SYS[s].c}">${SYS[s].nom}</span></span><span class="bar"><i style="width:${pct}%"></i></span><span class="n">${r.ok}/${r.n}</span></div>`;
+  }).join("") || `<p class="note">Aucune question posée.</p>`;
+  const body = `<div class="results">
+    <div class="box"><h3>Réussite par système</h3><p class="hint">Bonnes réponses sur questions posées pendant la partie.</p>${rows}</div>
+    <div class="box"><h3>Tous les rôles</h3><div class="allroles">${S.players.map(p => `<div><span>${esc(p.name)}</span><span class="vtag ${p.role === "loup" ? "loup" : ""}">${ROLES[p.role].nom}</span></div>`).join("")}</div></div>
+  </div>`;
+  render(scr({kicker:`Fin de la partie · ${S.round} ${S.round > 1 ? "jours" : "jour"}`,
+    title: village ? "Le village a gagné !" : "Les loups-garous ont gagné !",
+    script: village ? "Tous les loups-garous ont été démasqués. Sainte-Cellule est sauvée grâce à la science de ses habitants !"
+                    : "Les loups-garous sont maintenant aussi nombreux que les villageois. Sainte-Cellule est tombée…",
+    body, actions: btn("again", "Rejouer avec les mêmes joueurs") + btn("setup", "Retour aux réglages", "ghost")}),
+    {again: () => { newGame(S.names); deal(0); }, setup});
+}
+
+/* ---------- Réglages ---------- */
+function readNames(){
+  const seen = {};
+  return namesText.split("\n").map(s => s.trim()).filter(Boolean).map(n => {
+    seen[n] = (seen[n] || 0) + 1;
+    return seen[n] > 1 ? `${n} (${seen[n]})` : n;
+  });
+}
+function setup(){
+  S = {phase:"setup"}; setMood("night", "Préparation");
+  const n = readNames().length;
+  const sysBoxes = Object.keys(SYS).map(s => {
+    const cnt = poolFor([s]).length;
+    return `<label class="check"><input type="checkbox" class="sys" value="${s}" ${settings.systems.includes(s) ? "checked" : ""}><span class="chip" style="background:${SYS[s].c}">${SYS[s].nom}</span><span class="sys-n" data-sysn="${s}">${cnt} question${cnt > 1 ? "s" : ""}</span></label>`;
+  }).join("");
+  const wolfOpts = `<option value="auto">Automatique</option>` + [1,2,3,4,5,6,7,8].map(i => `<option value="${i}">${i}</option>`).join("");
+  const body = `
+  <p class="setup-intro">Un loup-garou classique où la science décide qui survit. Le meneur (vous) projette cet écran et lit les textes encadrés à voix haute. Une bonne réponse peut sauver une victime, innocenter un villageois ou faire acquitter un accusé.</p>
+  <div class="setup-grid">
+    <div class="box">
+      <h3>1. Les joueurs</h3>
+      <p class="hint">Un nom par ligne (copiez votre liste de classe). Minimum 5 joueurs.</p>
+      <textarea id="names" placeholder="Léa&#10;Mathis&#10;Florence&#10;Noah&#10;…">${esc(namesText)}</textarea>
+      <div class="row"><span id="ncount"><b>${n}</b> joueur${n > 1 ? "s" : ""}</span>
+        <span style="margin-left:auto" class="row"><label for="numN">Ou des numéros :</label><input type="number" id="numN" min="5" max="60" value="${n || 28}"><button type="button" class="mini" id="numBtn">Remplir</button></span></div>
+    </div>
+    <div class="box">
+      <h3>2. Les rôles</h3>
+      <div class="row"><label for="wolves">Nombre de loups-garous</label><select id="wolves">${wolfOpts}</select><span class="hint" id="wolfHint"></span></div>
+      <label class="check"><input type="checkbox" id="voyante" ${settings.voyante ? "checked" : ""}><span>Voyante<small>Chaque nuit, découvre le rôle d'un joueur.</small></span></label>
+      <label class="check"><input type="checkbox" id="medecin" ${settings.medecin ? "checked" : ""}><span>Médecin<small>Chaque nuit, protège un joueur contre les loups.</small></span></label>
+      <h3>3. Les questions décident…</h3>
+      <label class="check"><input type="checkbox" id="qVictim" ${settings.qVictim ? "checked" : ""}><span>La survie de la victime des loups<small>Bonne réponse : elle survit à l'attaque.</small></span></label>
+      <label class="check"><input type="checkbox" id="qDefense" ${settings.qDefense ? "checked" : ""}><span>La défense de l'accusé·e<small>Bonne réponse : acquitté·e malgré le vote.</small></span></label>
+      <label class="check"><input type="checkbox" id="qVillage" ${settings.qVillage ? "checked" : ""}><span>Un indice pour tout le village<small>Chacun montre sa fiche au meneur seulement; si la majorité a raison, un innocent est révélé.</small></span></label>
+      <label class="check"><input type="checkbox" id="qSeer" ${settings.qSeer ? "checked" : ""}><span>Le pouvoir de la voyante<small>Elle montre sa fiche au meneur, les yeux des autres fermés.</small></span></label>
+      <div class="row"><label for="answerMode">Réponse de la victime et de l'accusé·e</label><select id="answerMode">
+        <option value="card">Avec les fiches ABCD, montrées au meneur seulement</option><option value="voice">À voix haute ou en pointant</option></select></div>
+      <p class="hint">Vous pourrez aussi changer de façon sur l'écran de chaque question.</p>
+      <div class="row"><label for="timer">Temps par question</label><select id="timer">
+        <option value="0">Aucune minuterie</option><option value="20">20 secondes</option><option value="30">30 secondes</option><option value="45">45 secondes</option><option value="60">60 secondes</option></select></div>
+    </div>
+    <div class="box">
+      <h3>4. Les systèmes au programme</h3>
+      <div class="sys-list">${sysBoxes}</div>
+      <details><summary>Ajouter mes propres questions</summary>
+        <p class="hint">Une question par ligne, champs séparés par une barre verticale. La bonne réponse vient en premier; l'ordre est mélangé au moment du jeu.</p>
+        <p class="hint"><code>Question | Bonne réponse | Mauvaise 1 | Mauvaise 2 | Mauvaise 3 | Explication (facultatif)</code></p>
+        <textarea id="custom" style="min-height:140px" placeholder="Quel organe entrepose l'urine ? | La vessie | Le rein | L'uretère | Le foie | La vessie se vide par l'urètre.">${esc(customText)}</textarea>
+        <p class="hint" id="customInfo"></p>
+      </details>
+    </div>
+  </div>
+  <div class="box" style="margin-top:20px">
+    <h3>Déroulement d'un tour</h3>
+    <ol class="howto">
+      <li><b>Nuit :</b> tout le monde ferme les yeux. Le médecin protège quelqu'un, la voyante répond à une question pour sonder un joueur, puis les loups pointent leur victime.</li>
+      <li><b>Lever du jour :</b> la victime répond à une question de survie, avec sa fiche montrée au meneur seulement (l'écran indique si c'est bon sans révéler son choix) ou à voix haute. Mauvaise réponse : elle est éliminée et son rôle est révélé.</li>
+      <li><b>Laboratoire :</b> au signal « 3, 2, 1… fiches ! », tous les joueurs en vie montrent leur fiche au meneur. Le meneur compte les fiches de la bonne couleur; si la majorité a raison, un innocent est révélé. Les loups ont intérêt à répondre faux… sans que personne le sache.</li>
+      <li><b>Débat et vote :</b> le village accuse quelqu'un, qui répond à une question de défense, avec sa fiche ou à voix haute, pour sauver sa peau.</li>
+    </ol>
+    <p class="hint">Matériel : un jeu de fiches A, B, C, D par élève. Chaque lettre a sa couleur et sa forme (A rond bleu, B triangle orange, C carré vert, D losange violet), les mêmes qu'à l'écran, pour compter rapidement.</p>
+  </div>
+  <p class="err" id="err" role="alert"></p>`;
+  render(scr({kicker:"Préparation de la partie", title:"Qui sont les loups de Sainte-Cellule ?", body,
+    actions: btn("start", "Distribuer les rôles")}), {start: startGame});
+
+  $("#wolves").value = String(settings.wolves);
+  $("#timer").value = String(settings.timer);
+  $("#answerMode").value = settings.answerMode;
+  $("#answerMode").addEventListener("change", e => { settings.answerMode = e.target.value; save(); });
+  const save = () => store.set("lg-settings2", settings);
+  const refreshCounts = () => {
+    const k = readNames().length;
+    $("#ncount").innerHTML = `<b>${k}</b> joueur${k > 1 ? "s" : ""}`;
+    $("#wolfHint").textContent = settings.wolves === "auto" ? (k >= 5 ? `= ${autoWolves(k)} pour ${k} joueurs` : "") : "";
+  };
+  refreshCounts();
+  $("#names").addEventListener("input", e => { namesText = e.target.value; store.set("lg-names", namesText); refreshCounts(); });
+  $("#numBtn").addEventListener("click", () => {
+    const k = Math.min(60, Math.max(5, parseInt($("#numN").value, 10) || 28));
+    namesText = Array.from({length:k}, (_, i) => `Joueur ${i + 1}`).join("\n");
+    $("#names").value = namesText; store.set("lg-names", namesText); refreshCounts();
+  });
+  $("#wolves").addEventListener("change", e => { settings.wolves = e.target.value; save(); refreshCounts(); });
+  $("#timer").addEventListener("change", e => { settings.timer = +e.target.value; save(); });
+  ["voyante","medecin","qVictim","qDefense","qVillage","qSeer"].forEach(id =>
+    $("#" + id).addEventListener("change", e => { settings[id] = e.target.checked; save(); }));
+  stage.querySelectorAll(".sys").forEach(c => c.addEventListener("change", () => {
+    settings.systems = [...stage.querySelectorAll(".sys:checked")].map(x => x.value); save();
+  }));
+  const customInfo = () => {
+    const r = parseCustom(customText);
+    customQs = r.out;
+    const cnt = poolFor(["perso"]).length;
+    stage.querySelector('[data-sysn="perso"]').textContent = `${cnt} question${cnt > 1 ? "s" : ""}`;
+    $("#customInfo").textContent = (r.out.length ? `${r.out.length} question${r.out.length > 1 ? "s" : ""} prête${r.out.length > 1 ? "s" : ""}.` : "") +
+      (r.bad.length ? ` Ligne${r.bad.length > 1 ? "s" : ""} ${r.bad.join(", ")} ignorée${r.bad.length > 1 ? "s" : ""} : il faut au moins 5 champs remplis.` : "");
+  };
+  customInfo();
+  $("#custom").addEventListener("input", e => { customText = e.target.value; store.set("lg-custom", customText); customInfo(); });
+}
+function startGame(){
+  const names = readNames(), n = names.length, err = $("#err");
+  const nW = settings.wolves === "auto" ? autoWolves(n) : +settings.wolves;
+  const specials = (settings.voyante ? 1 : 0) + (settings.medecin ? 1 : 0);
+  if (n < 5) return err.textContent = "Il faut au moins 5 joueurs pour commencer.";
+  if (nW * 2 >= n) return err.textContent = `Avec ${n} joueurs, il faut moins de ${Math.ceil(n / 2)} loups-garous. Réduisez leur nombre.`;
+  if (nW + specials > n) return err.textContent = "Il y a plus de rôles spéciaux que de joueurs.";
+  if (!poolFor(settings.systems).length) return err.textContent = "Cochez au moins un système qui contient des questions.";
+  newGame(names);
+  deal(0);
+}
+
+setup();
+</script>
+</body>
+</html>
