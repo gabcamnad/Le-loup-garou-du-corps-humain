@@ -96,6 +96,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .opt:disabled,.opt.static{cursor:default}
 .opt.static:hover{border-color:var(--line)}
 .heart{color:#ef7fb0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.filebtn{display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap}
+.filebtn:has(+ input:focus-visible){outline:3px solid var(--gold);outline-offset:2px}
+textarea.drop{outline:3px dashed var(--gold);outline-offset:2px}
+.groups{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.groups input[type="text"]{font:inherit;color:var(--text);background:var(--ink);border:1px solid var(--line-strong);border-radius:10px;padding:8px 12px;flex:1;min-width:160px}
+.groups select{flex:1;min-width:160px}
 .charmlist{font-size:clamp(1.4rem,2.4vw,2rem);font-weight:700;margin:20px 0 0;max-width:40ch}
 .countbox{margin-top:18px;padding:18px 20px;border-radius:12px;background:var(--panel-2);display:flex;flex-direction:column;gap:10px;max-width:70ch}
 .countbox label{font-weight:700;font-size:1.15rem}
@@ -1260,6 +1267,86 @@ function endGame(w){
     {again: () => { newGame(S.names); deal(0); }, setup});
 }
 
+/* ---------- Import de fichiers (Excel, CSV, texte) ---------- */
+let xlsxP = null;
+function loadXLSX(){
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  if (!xlsxP) xlsxP = new Promise((res, rej) => {
+    const sc = document.createElement("script");
+    sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    sc.onload = () => res(window.XLSX);
+    sc.onerror = () => { xlsxP = null; rej(new Error("xlsx")); };
+    document.head.appendChild(sc);
+  });
+  return xlsxP;
+}
+function splitCSV(line, d){
+  const out = []; let cur = "", q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (q) { if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (ch === '"') q = false; else cur += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === d) { out.push(cur.trim()); cur = ""; }
+    else cur += ch;
+  }
+  out.push(cur.trim());
+  return out;
+}
+/* Lit un fichier et renvoie un tableau de lignes, chaque ligne étant un tableau de cellules */
+async function readTable(file){
+  const name = file.name.toLowerCase();
+  if (/\.(xlsx|xls|ods)$/.test(name)) {
+    const XLSX = await loadXLSX();
+    const wb = XLSX.read(new Uint8Array(await file.arrayBuffer()), {type:"array"});
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    return XLSX.utils.sheet_to_json(ws, {header:1, raw:false, defval:""}).map(r => r.map(c => String(c).trim()));
+  }
+  const buf = await file.arrayBuffer();
+  let text;
+  try { text = new TextDecoder("utf-8", {fatal:true}).decode(buf); }
+  catch (e) { text = new TextDecoder("windows-1252").decode(buf); }   /* CSV enregistré par Excel sous Windows */
+  text = text.replace(/^﻿/, "");
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  const first = lines[0] || "";
+  const delim = /\.txt$/.test(name) && !/[;\t|]/.test(text) ? null
+    : [";", "\t", "|", ","].map(c => [c, first.split(c).length]).sort((a, b) => b[1] - a[1])[0];
+  return lines.map(l => delim && delim[1] > 1 ? splitCSV(l, delim[0]) : [l.trim()]);
+}
+const normTxt = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+/* Noms d'élèves : reconnaît les colonnes « Prénom » et « Nom »; sinon prend les cellules de texte de chaque ligne */
+function namesFromRows(rows){
+  const isHead = c => /^(prenom|nom|nom de famille|nom complet|eleve|nom de l.eleve|nom, prenom|fiche)\b/.test(normTxt(c));
+  let hi = rows.slice(0, 5).findIndex(r => r.some(isHead));
+  const out = [];
+  if (hi >= 0) {
+    const h = rows[hi].map(normTxt);
+    const iP = h.findIndex(c => /^prenom/.test(c));
+    const iN = h.findIndex(c => /^(nom|nom de famille|nom complet|eleve|nom de l.eleve)$/.test(c));
+    rows.slice(hi + 1).forEach(r => {
+      const v = [iP >= 0 ? r[iP] : "", iN >= 0 ? r[iN] : ""].filter(Boolean).join(" ").trim()
+        || (r.find(c => c && !/^[\d\s.,:/-]+$/.test(c)) || "");
+      if (v) out.push(v);
+    });
+  } else {
+    rows.forEach(r => {
+      const cells = r.filter(c => c && !/^[\d\s.,:/-]+$/.test(c)).slice(0, 2);
+      if (cells.length) out.push(cells.join(" "));
+    });
+  }
+  return out;
+}
+/* Questions : Question | Bonne réponse | Mauvaise 1 | Mauvaise 2 | Mauvaise 3 | Explication */
+function questionsFromRows(rows){
+  const out = [];
+  rows.forEach((r, i) => {
+    const c = r.map(x => String(x).replace(/\|/g, "/").trim());
+    if (i === 0 && /question/.test(normTxt(c[0] || ""))) return;   /* ligne d'en-tête */
+    if (c.length >= 5 && c.slice(0, 5).every(Boolean)) out.push(c.slice(0, 6).filter((x, j) => j < 5 || x).join(" | "));
+  });
+  return out;
+}
+const IMPORT_FAIL = "Impossible de lire ce fichier. Enregistrez-le en CSV ou copiez-collez la colonne dans la boîte.";
+
 /* ---------- Réglages ---------- */
 function readNames(){
   const seen = {};
@@ -1281,10 +1368,22 @@ function setup(){
   <div class="setup-grid">
     <div class="box">
       <h3>1. Les joueurs</h3>
-      <p class="hint">Un nom par ligne (copiez votre liste de classe). Minimum 5 joueurs.</p>
+      <p class="hint">Un nom par ligne. Importez un fichier, glissez-le dans la boîte, ou collez une colonne copiée d'Excel. Minimum 5 joueurs.</p>
+      <div class="row">
+        <label class="mini filebtn" for="namesFile">Importer un fichier</label>
+        <input type="file" id="namesFile" class="sr-only" accept=".xlsx,.xls,.ods,.csv,.txt">
+        <span class="hint" id="importInfo" aria-live="polite">Excel, CSV ou texte. Les colonnes « Prénom » et « Nom » sont reconnues.</span>
+      </div>
       <textarea id="names" placeholder="Léa&#10;Mathis&#10;Florence&#10;Noah&#10;…">${esc(namesText)}</textarea>
       <div class="row"><span id="ncount"><b>${n}</b> joueur${n > 1 ? "s" : ""}</span>
         <span style="margin-left:auto" class="row"><label for="numN">Ou des numéros :</label><input type="number" id="numN" min="5" max="60" value="${n || 28}"><button type="button" class="mini" id="numBtn">Remplir</button></span></div>
+      <div class="groups">
+        <div class="row"><label for="groupSel">Mes groupes</label><select id="groupSel"></select>
+          <button type="button" class="mini" id="groupDel">Supprimer</button></div>
+        <div class="row"><input type="text" id="groupName" placeholder="Nom du groupe (ex. 302)" maxlength="40">
+          <button type="button" class="mini" id="groupSave">Enregistrer cette liste</button></div>
+        <p class="hint" id="groupInfo" aria-live="polite">Enregistrez chaque liste une fois, puis choisissez le groupe avant de jouer.</p>
+      </div>
     </div>
     <div class="box">
       <h3>2. Les rôles</h3>
@@ -1311,6 +1410,11 @@ function setup(){
         <p class="hint">Une question par ligne, champs séparés par une barre verticale. La bonne réponse vient en premier; l'ordre est mélangé au moment du jeu.</p>
         <p class="hint"><code>Question | Bonne réponse | Mauvaise 1 | Mauvaise 2 | Mauvaise 3 | Explication (facultatif)</code></p>
         <textarea id="custom" style="min-height:140px" placeholder="Quel organe entrepose l'urine ? | La vessie | Le rein | L'uretère | Le foie | La vessie se vide par l'urètre.">${esc(customText)}</textarea>
+        <div class="row">
+          <label class="mini filebtn" for="customFile">Importer un fichier de questions</label>
+          <input type="file" id="customFile" class="sr-only" accept=".xlsx,.xls,.ods,.csv,.txt">
+          <span class="hint">Excel ou CSV : une question par ligne, dans les colonnes Question, Bonne réponse, Mauvaise 1, Mauvaise 2, Mauvaise 3, Explication.</span>
+        </div>
         <p class="hint" id="customInfo"></p>
       </details>
     </div>
@@ -1344,6 +1448,54 @@ function setup(){
   };
   refreshCounts();
   $("#names").addEventListener("input", e => { namesText = e.target.value; store.set("lg-names", namesText); refreshCounts(); });
+  const setNames = t => { namesText = t; $("#names").value = t; store.set("lg-names", t); refreshCounts(); };
+  const importNames = async file => {
+    const info = $("#importInfo");
+    info.textContent = "Lecture du fichier…";
+    try {
+      const names = namesFromRows(await readTable(file));
+      if (!names.length) { info.textContent = "Aucun nom trouvé dans ce fichier."; return; }
+      setNames(names.join("\n"));
+      info.textContent = `${names.length} nom${names.length > 1 ? "s" : ""} importé${names.length > 1 ? "s" : ""} de « ${file.name} ». Vérifiez la liste, puis enregistrez-la comme groupe.`;
+      $("#groupSel").value = "";
+    } catch (e) { info.textContent = IMPORT_FAIL; }
+  };
+  $("#namesFile").addEventListener("change", e => { const f = e.target.files[0]; if (f) importNames(f); e.target.value = ""; });
+  $("#names").addEventListener("dragover", e => { if ([...e.dataTransfer.types].includes("Files")) { e.preventDefault(); e.target.classList.add("drop"); } });
+  $("#names").addEventListener("dragleave", e => e.target.classList.remove("drop"));
+  $("#names").addEventListener("drop", e => {
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    e.target.classList.remove("drop");
+    if (f) { e.preventDefault(); importNames(f); }
+  });
+  /* Groupes enregistrés dans ce navigateur */
+  let groups = store.get("lg-groups", {});
+  const fillGroups = sel => {
+    const names = Object.keys(groups).sort((a, b) => a.localeCompare(b, "fr", {numeric:true}));
+    $("#groupSel").innerHTML = `<option value="">${names.length ? "Choisir un groupe…" : "Aucun groupe enregistré"}</option>` +
+      names.map(g => `<option value="${esc(g)}">${esc(g)} (${groups[g].split("\n").filter(x => x.trim()).length})</option>`).join("");
+    $("#groupSel").value = sel || "";
+  };
+  fillGroups(store.get("lg-group", ""));
+  $("#groupSel").addEventListener("change", e => {
+    const g = e.target.value; store.set("lg-group", g);
+    if (!g) return;
+    setNames(groups[g]); $("#groupName").value = g;
+    $("#groupInfo").textContent = `Groupe « ${g} » chargé.`;
+  });
+  $("#groupSave").addEventListener("click", () => {
+    const g = $("#groupName").value.trim() || $("#groupSel").value;
+    if (!g) { $("#groupInfo").textContent = "Donnez d'abord un nom au groupe (ex. 302)."; $("#groupName").focus(); return; }
+    if (!readNames().length) { $("#groupInfo").textContent = "La liste est vide : importez ou écrivez des noms d'abord."; return; }
+    groups[g] = namesText; store.set("lg-groups", groups); store.set("lg-group", g); fillGroups(g);
+    $("#groupInfo").textContent = `Groupe « ${g} » enregistré dans ce navigateur.`;
+  });
+  $("#groupDel").addEventListener("click", () => {
+    const g = $("#groupSel").value;
+    if (!g) { $("#groupInfo").textContent = "Choisissez d'abord le groupe à supprimer."; return; }
+    delete groups[g]; store.set("lg-groups", groups); store.set("lg-group", ""); fillGroups("");
+    $("#groupInfo").textContent = `Groupe « ${g} » supprimé. La liste affichée n'a pas changé.`;
+  });
   $("#numBtn").addEventListener("click", () => {
     const k = Math.min(60, Math.max(5, parseInt($("#numN").value, 10) || 28));
     namesText = Array.from({length:k}, (_, i) => `Joueur ${i + 1}`).join("\n");
@@ -1374,6 +1526,19 @@ function setup(){
   };
   customInfo();
   $("#custom").addEventListener("input", e => { customText = e.target.value; store.set("lg-custom", customText); customInfo(); });
+  $("#customFile").addEventListener("change", async e => {
+    const f = e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    try {
+      const lines = questionsFromRows(await readTable(f));
+      if (!lines.length) { $("#customInfo").textContent = "Aucune question trouvée : il faut au moins 5 colonnes remplies par ligne."; return; }
+      customText = (customText.trim() ? customText.trim() + "\n" : "") + lines.join("\n");
+      $("#custom").value = customText; store.set("lg-custom", customText); customInfo();
+      const sys = stage.querySelector('.sys[value="perso"]');
+      if (sys && !sys.checked) sys.click();
+      $("#customInfo").textContent = `${lines.length} question${lines.length > 1 ? "s" : ""} importée${lines.length > 1 ? "s" : ""} de « ${f.name} ». ` + $("#customInfo").textContent;
+    } catch (err) { $("#customInfo").textContent = IMPORT_FAIL; }
+  });
 }
 function startGame(){
   const names = readNames(), n = names.length, err = $("#err");

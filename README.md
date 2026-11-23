@@ -38,6 +38,13 @@ Le village gagne quand tous les loups (et le joueur de flûte) sont éliminés. 
 - Distribution des rôles à l'écran, un élève à la fois, ou liste du meneur à copier pour faire des cartes papier.
 - Minuterie par question (facultative), 2 minutes de débat, bilan de réussite par système à la fin.
 
+## Importer ses listes d'élèves
+
+Dans les réglages, section « 1. Les joueurs » :
+
+- **Importer un fichier** : Excel (.xlsx, .xls), LibreOffice (.ods), CSV ou texte. Les colonnes « Prénom » et « Nom » sont reconnues (par exemple dans une liste exportée du système de l'école); les numéros de fiche et les lignes de titre sont ignorés. On peut aussi glisser le fichier dans la boîte, ou coller une colonne copiée d'Excel.
+- **Mes groupes** : enregistrez chaque liste une fois (ex. 301, 302), puis choisissez le groupe avant de jouer. Les groupes restent dans le navigateur de l'ordinateur utilisé; ils ne sont envoyés nulle part.
+
 ## Ajouter ses propres questions
 
 Dans les réglages, section « Ajouter mes propres questions », une question par ligne :
@@ -47,6 +54,8 @@ Question | Bonne réponse | Mauvaise 1 | Mauvaise 2 | Mauvaise 3 | Explication (
 ```
 
 L'ordre des choix est mélangé au moment du jeu.
+
+On peut aussi importer un fichier Excel ou CSV de questions, avec une question par ligne et les colonnes dans cet ordre : Question, Bonne réponse, Mauvaise 1, Mauvaise 2, Mauvaise 3, Explication (facultative).
 
 ## Mettre en ligne avec GitHub Pages
 
