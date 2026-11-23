@@ -95,6 +95,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .opt .lt{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--ink);font-weight:700;font-size:1.35rem}
 .opt:disabled,.opt.static{cursor:default}
 .opt.static:hover{border-color:var(--line)}
+.heart{color:#ef7fb0}
+.charmlist{font-size:clamp(1.4rem,2.4vw,2rem);font-weight:700;margin:20px 0 0;max-width:40ch}
 .countbox{margin-top:18px;padding:18px 20px;border-radius:12px;background:var(--panel-2);display:flex;flex-direction:column;gap:10px;max-width:70ch}
 .countbox label{font-weight:700;font-size:1.15rem}
 .countbox input{width:110px;font-size:1.6rem;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
@@ -311,7 +313,329 @@ const RAW = [
 ["rep","Quel organe permet les échanges entre la mère et le fœtus ?","Le placenta","Le cordon ombilical","L'ovaire","Le col de l'utérus","Le cordon ombilical relie le fœtus au placenta, où se font les échanges."],
 ["rep","Combien de chromosomes un gamète humain contient-il ?","23","46","22","92","Les autres cellules du corps en ont 46 : la fécondation réunit 23 + 23."],
 ["rep","Quelle méthode protège à la fois contre une grossesse et contre les ITSS ?","Le condom","La pilule contraceptive","Le stérilet","La contraception orale d'urgence","Le condom est la seule de ces méthodes qui forme une barrière contre les ITSS."],
-["rep","Dans quel organe l'embryon se développe-t-il ?","L'utérus","L'ovaire","La trompe utérine","Le placenta","L'embryon s'implante dans la paroi de l'utérus."]
+["rep","Dans quel organe l'embryon se développe-t-il ?","L'utérus","L'ovaire","La trompe utérine","Le placenta","L'embryon s'implante dans la paroi de l'utérus."],
+
+["dig", "Quel organe entrepose la bile avant de la libérer dans l'intestin ?", "La vésicule biliaire", "Le foie", "Le pancréas", "La rate", "Le foie fabrique la bile; la vésicule biliaire la garde en réserve jusqu'au repas."],
+["dig", "Comment s'appelle la première partie de l'intestin grêle, où arrivent la bile et le suc pancréatique ?", "Le duodénum", "Le côlon", "Le rectum", "L'œsophage", "Le duodénum fait environ 25 cm; c'est là que la digestion chimique s'accélère."],
+["dig", "En quoi les lipides sont-ils transformés lors de la digestion ?", "En acides gras et en glycérol", "En acides aminés", "En glucose", "En vitamines", "Les acides aminés viennent des protéines et le glucose vient des glucides."],
+["dig", "En quoi l'amidon est-il finalement transformé à la fin de sa digestion ?", "En glucose", "En acides aminés", "En acides gras", "En glycérol", "L'amidon est un glucide complexe formé de nombreuses molécules de glucose attachées ensemble."],
+["dig", "Quel est le rôle de la bile dans la digestion ?", "Séparer les graisses en fines gouttelettes", "Digérer les protéines", "Absorber l'eau", "Tuer les bactéries de l'estomac", "La bile ne contient pas d'enzymes : elle prépare les lipides pour que les enzymes agissent plus facilement."],
+["dig", "Quelles structures de l'intestin grêle augmentent beaucoup sa surface d'absorption ?", "Les villosités", "Les alvéoles", "Les néphrons", "Les papilles gustatives", "Ces minuscules replis en forme de doigts contiennent des capillaires qui captent les nutriments."],
+["dig", "Par quel orifice les selles sont-elles évacuées hors du corps ?", "L'anus", "L'urètre", "Le duodénum", "Le pharynx", "Le rectum garde les selles en réserve juste avant l'anus."],
+["dig", "Lequel de ces nutriments n'a PAS besoin d'être digéré pour être absorbé ?", "L'eau", "Les protéines", "L'amidon", "Les lipides", "L'eau, les minéraux et les vitamines sont assez petits pour être absorbés tels quels."],
+["dig", "Quelles substances accélèrent la transformation chimique des aliments ?", "Les enzymes digestives", "Les hormones", "Les anticorps", "Les vitamines", "Chaque enzyme digestive agit sur un type précis de nutriment."],
+["dig", "Quel est le rôle principal des glucides dans l'alimentation ?", "Fournir de l'énergie rapidement", "Construire et réparer les tissus", "Transporter le dioxygène", "Former les os", "Le pain, les pâtes et les fruits sont riches en glucides."],
+["dig", "Quel nutriment sert surtout à construire et à réparer les tissus, comme les muscles ?", "Les protéines", "Les glucides", "Les lipides", "Les vitamines", "On trouve beaucoup de protéines dans la viande, le poisson, les œufs, les légumineuses et le tofu."],
+["dig", "Les fibres alimentaires des fruits, des légumes et des grains entiers aident surtout à…", "faciliter le passage des aliments dans l'intestin", "fournir beaucoup d'énergie", "transporter le dioxygène", "produire la bile", "Les fibres ne sont presque pas digérées, mais elles aident le transit intestinal."],
+["dig", "Quel trajet des aliments est dans le bon ordre ?", "Bouche → œsophage → estomac → intestin grêle → gros intestin", "Bouche → estomac → œsophage → intestin grêle → gros intestin", "Bouche → œsophage → estomac → gros intestin → intestin grêle", "Bouche → œsophage → intestin grêle → estomac → gros intestin", "Les aliments traversent ensuite le rectum avant d'être évacués par l'anus."],
+["dig", "Quelles glandes digestives se trouvent dans la bouche ?", "Les glandes salivaires", "Les glandes gastriques", "Le pancréas", "Les glandes intestinales", "Les glandes salivaires produisent environ un litre de salive par jour."],
+["dig", "Quel organe brasse les aliments avec ses sucs jusqu'à former une bouillie ?", "L'estomac", "L'intestin grêle", "L'œsophage", "Le gros intestin", "Les muscles épais de l'estomac mélangent les aliments; cette bouillie s'appelle le chyme."],
+["dig", "Quel type de nutriment sert de réserve d'énergie à long terme dans le corps ?", "Les lipides", "Les protéines", "L'eau", "Les minéraux", "Les lipides contiennent plus de deux fois plus d'énergie que les glucides pour une même masse."],
+["res", "Comment s'appellent les ramifications de plus en plus fines des bronches ?", "Les bronchioles", "Les alvéoles", "Les capillaires", "Les villosités", "Les bronchioles se terminent par des grappes d'alvéoles."],
+["res", "Qu'est-ce qui garde la trachée toujours ouverte ?", "Des anneaux de cartilage", "Des os", "Des muscles seulement", "Des ligaments", "On peut sentir ces anneaux en touchant doucement l'avant de son cou."],
+["res", "Pourquoi les alvéoles sont-elles si efficaces pour les échanges gazeux ?", "Leur paroi est très mince et entourée de capillaires", "Elles sont remplies de mucus", "Elles sont faites de cartilage", "Elles contiennent des globules blancs", "Les gaz n'ont qu'une très mince paroi à traverser pour passer entre l'air et le sang."],
+["res", "Pourquoi le poumon gauche est-il un peu plus petit que le poumon droit ?", "Pour laisser de la place au cœur", "Parce qu'il travaille moins", "Parce qu'il contient moins d'alvéoles inutiles", "Pour laisser de la place à l'estomac", "Le cœur est légèrement décalé vers la gauche dans la cage thoracique."],
+["res", "Quelle est la fonction principale du système respiratoire ?", "Capter le dioxygène et rejeter le dioxyde de carbone", "Transporter les nutriments", "Filtrer le sang", "Produire des hormones", "C'est le sang qui transporte ensuite le dioxygène jusqu'aux cellules."],
+["res", "Pendant l'inspiration, la pression de l'air dans les poumons devient…", "plus basse que celle de l'air extérieur", "plus haute que celle de l'air extérieur", "égale à celle de l'air extérieur", "nulle", "L'air se déplace toujours d'une pression haute vers une pression basse : il entre donc dans les poumons."],
+["res", "Que font les muscles intercostaux lors de l'inspiration ?", "Ils soulèvent les côtes et agrandissent la cage thoracique", "Ils abaissent les côtes", "Ils font vibrer les cordes vocales", "Ils ferment l'épiglotte", "Ils travaillent avec le diaphragme pour augmenter le volume de la cage thoracique."],
+["res", "Quel conduit amène l'air du larynx jusqu'aux bronches ?", "La trachée", "L'œsophage", "Le pharynx", "Une bronchiole", "La trachée se divise ensuite en deux bronches, une pour chaque poumon."],
+["res", "Quel gaz est le plus abondant dans l'air que l'on respire ?", "Le diazote (N₂)", "Le dioxygène (O₂)", "Le dioxyde de carbone (CO₂)", "La vapeur d'eau", "L'air contient environ 78 % de diazote et 21 % de dioxygène."],
+["res", "Comparé à l'air inspiré, l'air expiré contient…", "plus de CO₂ et moins d'O₂", "plus d'O₂ et moins de CO₂", "exactement les mêmes gaz", "seulement du CO₂", "L'air expiré contient encore environ 16 % de dioxygène : c'est pourquoi la respiration bouche-à-bouche fonctionne."],
+["res", "Pourquoi la fumée de cigarette nuit-elle aux voies respiratoires ?", "Elle paralyse les cils qui nettoient les voies respiratoires", "Elle agrandit les alvéoles", "Elle ajoute du dioxygène", "Elle renforce le diaphragme", "Sans les cils, le mucus et les particules s'accumulent; c'est ce qui cause la toux du fumeur."],
+["res", "Lors d'une crise d'asthme, que se passe-t-il ?", "Les bronches se resserrent et l'air passe difficilement", "Les alvéoles se remplissent de sang", "Le diaphragme cesse de bouger", "La trachée se bouche avec de la nourriture", "Les pompes contre l'asthme contiennent un médicament qui aide à rouvrir les bronches."],
+["res", "Quelle structure se divise en deux pour envoyer l'air vers chaque poumon ?", "La trachée", "Le larynx", "Le pharynx", "L'œsophage", "Chaque branche s'appelle une bronche."],
+["res", "Le dioxygène capté par les poumons sert surtout à…", "permettre aux cellules de produire de l'énergie", "refroidir le corps", "fabriquer les os", "digérer les aliments", "Dans les cellules, le dioxygène sert à libérer l'énergie des nutriments : c'est la respiration cellulaire."],
+["res", "Pourquoi respire-t-on plus vite pendant un effort physique ?", "Les muscles ont besoin de plus de dioxygène et produisent plus de CO₂", "Les poumons se remplissent d'eau", "Le cœur ralentit", "L'air devient plus chaud", "Le cœur accélère aussi, pour livrer plus vite le dioxygène aux muscles."],
+["cir", "Quelles cavités du cœur reçoivent le sang qui arrive au cœur ?", "Les oreillettes", "Les ventricules", "Les valvules", "Les artères", "Les oreillettes sont en haut du cœur; elles envoient ensuite le sang vers les ventricules."],
+["cir", "Quelles cavités du cœur propulsent le sang hors du cœur ?", "Les ventricules", "Les oreillettes", "Les veines caves", "Les capillaires", "Les ventricules ont des parois musculaires épaisses pour pousser le sang avec force."],
+["cir", "Pourquoi la paroi du ventricule gauche est-elle plus épaisse que celle du ventricule droit ?", "Il doit pousser le sang dans tout le corps", "Il reçoit le sang des poumons", "Il contient plus de sang", "Il produit les globules rouges", "Le ventricule droit envoie le sang seulement aux poumons, qui sont tout près."],
+["cir", "Quels vaisseaux ramènent le sang des organes vers le cœur ?", "Les veines", "Les artères", "Les capillaires", "L'aorte", "Les veines ont des valvules qui empêchent le sang de reculer."],
+["cir", "Quels vaisseaux ramènent le sang riche en dioxygène des poumons au cœur ?", "Les veines pulmonaires", "Les veines caves", "Les artères pulmonaires", "L'aorte", "C'est l'exception à retenir : ces veines contiennent du sang riche en dioxygène."],
+["cir", "Par quels vaisseaux le sang pauvre en dioxygène du corps arrive-t-il dans l'oreillette droite ?", "Les veines caves", "Les veines pulmonaires", "L'aorte", "Les artères pulmonaires", "Il y a une veine cave supérieure et une veine cave inférieure."],
+["cir", "Quel groupe sanguin est appelé receveur universel ?", "AB+", "O−", "A−", "B+", "Ses globules rouges portent les antigènes A, B et Rh, et son plasma ne contient pas d'anticorps anti-A ni anti-B."],
+["cir", "Sans tenir compte du facteur Rh, une personne du groupe A peut recevoir du sang de quels groupes ?", "A et O", "A et AB", "B et O", "AB seulement", "Son plasma contient des anticorps anti-B : elle ne peut pas recevoir de globules rouges portant l'antigène B."],
+["cir", "Quels antigènes trouve-t-on sur les globules rouges d'une personne du groupe B ?", "Des antigènes B", "Des antigènes A", "Des antigènes A et B", "Aucun antigène A ni B", "Le groupe O n'a ni antigène A ni antigène B; le groupe AB a les deux."],
+["cir", "Quels éléments figurés sont les plus nombreux dans le sang ?", "Les globules rouges", "Les globules blancs", "Les plaquettes", "Les lymphocytes", "Une goutte de sang contient des millions de globules rouges."],
+["cir", "Comment appelle-t-on la circulation qui va du cœur à tous les organes, sauf les poumons ?", "La circulation systémique (grande circulation)", "La circulation pulmonaire", "La circulation lymphatique", "La circulation nerveuse", "Elle part du ventricule gauche par l'aorte et revient à l'oreillette droite."],
+["cir", "Que mesure-t-on quand on prend le pouls ?", "Le nombre de battements du cœur par minute", "La pression dans les veines", "Le nombre de respirations par minute", "La quantité de sang dans le corps", "Au repos, le cœur d'un adolescent bat environ 60 à 100 fois par minute."],
+["cir", "Quelle protéine des globules rouges transporte le dioxygène ?", "L'hémoglobine", "L'insuline", "La kératine", "Un anticorps", "L'hémoglobine contient du fer, ce qui donne au sang sa couleur rouge."],
+["cir", "Que transporte le plasma ?", "Des nutriments, des déchets et des hormones", "Seulement du dioxygène", "Seulement des globules blancs", "Seulement des minéraux", "Le plasma est le liquide jaunâtre dans lequel baignent les cellules du sang."],
+["cir", "Environ combien de litres de sang le corps d'un adulte contient-il ?", "5 litres", "1 litre", "15 litres", "50 litres", "Cela représente environ 7 % de la masse du corps."],
+["cir", "Dans quel sens le sang circule-t-il dans le cœur ?", "Des oreillettes vers les ventricules", "Des ventricules vers les oreillettes", "D'un ventricule à l'autre", "D'une oreillette à l'autre", "Les valvules entre les oreillettes et les ventricules empêchent le sang de revenir en arrière."],
+["lym", "En plus de la défense, quel rôle joue le système lymphatique ?", "Ramener vers le sang le liquide sorti des capillaires", "Produire l'urine", "Transporter le dioxygène", "Fabriquer la bile", "Sans lui, ce liquide s'accumulerait dans les tissus et causerait de l'enflure."],
+["lym", "Pourquoi les ganglions du cou peuvent-ils enfler pendant une infection de la gorge ?", "Les globules blancs s'y multiplient pour combattre l'infection", "Ils se remplissent d'air", "Ils produisent de la bile", "Ils retiennent l'eau qu'on a bue", "Les ganglions enflés sont un signe que le système immunitaire travaille."],
+["lym", "Quelle est la première barrière du corps contre les microbes ?", "La peau et les muqueuses", "Les anticorps", "Les vaccins", "Les ganglions", "Une peau intacte empêche la plupart des microbes d'entrer; une coupure leur ouvre la porte."],
+["lym", "Comment appelle-t-on l'action de certains globules blancs qui avalent et détruisent les microbes ?", "La phagocytose", "La coagulation", "La filtration", "La digestion chimique", "Ces globules blancs entourent le microbe, l'avalent puis le détruisent."],
+["lym", "Que se passe-t-il quand le corps rencontre une deuxième fois un microbe qu'il a déjà combattu ?", "Il produit des anticorps beaucoup plus vite", "Il ne réagit plus du tout", "Il a besoin d'un sérum pour se défendre", "Le microbe devient inoffensif tout seul", "C'est le même principe qui rend les vaccins efficaces."],
+["lym", "Contre quels microbes les antibiotiques sont-ils efficaces ?", "Les bactéries", "Les virus", "Tous les microbes", "Les allergies", "Les antibiotiques sont inutiles contre un rhume ou une grippe, qui sont causés par des virus."],
+["lym", "Dans quelle situation utilise-t-on un sérum plutôt qu'un vaccin ?", "Quand il faut une protection immédiate, comme après une morsure de serpent venimeux", "Pour protéger quelqu'un toute sa vie", "Pour prévenir une maladie l'an prochain", "Pour remplacer les globules rouges", "Le sérum apporte des anticorps tout prêts, qui agissent tout de suite."],
+["lym", "Laquelle de ces structures fait partie du système lymphatique ?", "Les amygdales", "La vésicule biliaire", "Les uretères", "Le larynx", "Les amygdales, au fond de la gorge, aident à intercepter les microbes qui entrent par la bouche."],
+["lym", "En plus de l'eau, que contient surtout la lymphe ?", "Des globules blancs", "Des globules rouges", "De la bile", "De l'urée", "La lymphe ne contient pas de globules rouges : c'est pourquoi elle est claire."],
+["lym", "Qu'est-ce qu'une allergie ?", "Une réaction exagérée du système immunitaire à une substance normalement inoffensive", "Une infection causée par une bactérie", "Un manque de globules blancs", "Une maladie du système digestif", "Le pollen, les arachides et les poils d'animaux sont des exemples de substances qui causent des allergies."],
+["lym", "Pourquoi se laver les mains aide-t-il à prévenir les infections ?", "On élimine des microbes avant qu'ils entrent dans le corps", "On produit des anticorps", "On renforce les ganglions", "Cela remplace un vaccin", "C'est une façon simple de renforcer la première barrière du corps."],
+["lym", "Quel est l'effet de la vaccination à l'échelle d'une population ?", "Elle freine la propagation d'une maladie et protège les plus vulnérables", "Elle remplace tous les médicaments", "Elle élimine toutes les bactéries", "Elle rend les antibiotiques inutiles", "Quand assez de gens sont vaccinés, le microbe circule difficilement : on parle d'immunité collective."],
+["lym", "Quels éléments du sang défendent le corps contre les infections ?", "Les globules blancs", "Les globules rouges", "Les plaquettes", "Le plasma seulement", "Il existe plusieurs sortes de globules blancs, dont les lymphocytes."],
+["lym", "Où les lymphocytes sont-ils particulièrement nombreux ?", "Dans les ganglions lymphatiques", "Dans l'estomac", "Dans les alvéoles", "Dans la vessie", "Les ganglions sont comme des postes de garde répartis le long des vaisseaux lymphatiques."],
+["lym", "Qu'est-ce qu'un microbe pathogène ?", "Un microorganisme qui peut causer une maladie", "Un globule blanc", "Un anticorps", "Un vaccin", "Beaucoup de microbes sont inoffensifs ou même utiles, comme les bactéries de l'intestin."],
+["exc", "Quel organe entrepose l'urine avant son évacuation ?", "La vessie", "Le rein", "L'uretère", "L'urètre", "La vessie peut contenir environ un demi-litre d'urine."],
+["exc", "Combien de reins un humain possède-t-il normalement ?", "2", "1", "3", "4", "On peut vivre en santé avec un seul rein, par exemple après un don d'organe."],
+["exc", "Qu'est-ce que l'excrétion ?", "L'élimination des déchets produits par les cellules", "L'élimination des restes d'aliments non digérés", "L'absorption des nutriments", "La production d'hormones", "Les selles, elles, contiennent surtout des restes d'aliments : leur évacuation n'est pas de l'excrétion."],
+["exc", "Lequel de ces éléments ne devrait normalement PAS se trouver dans l'urine ?", "Du glucose", "De l'eau", "De l'urée", "Des sels minéraux", "Du glucose dans l'urine peut être un signe de diabète."],
+["exc", "Que contient la sueur ?", "De l'eau, des sels minéraux et un peu d'urée", "Du sang", "De la bile", "Du dioxygène", "C'est le sel de la sueur qui lui donne son goût salé."],
+["exc", "En plus d'éliminer des déchets, à quoi sert la transpiration ?", "À refroidir le corps", "À réchauffer le corps", "À digérer les aliments", "À fabriquer des globules", "En s'évaporant, la sueur emporte de la chaleur."],
+["exc", "Quel vaisseau amène au rein le sang à filtrer ?", "L'artère rénale", "La veine rénale", "L'artère pulmonaire", "La veine cave", "Les reins filtrent tout le sang du corps plusieurs dizaines de fois par jour."],
+["exc", "Par quel vaisseau le sang filtré quitte-t-il le rein ?", "La veine rénale", "L'artère rénale", "L'uretère", "L'urètre", "Les déchets retirés du sang partent, eux, avec l'urine par l'uretère."],
+["exc", "Les reins aident à garder le sang en équilibre en contrôlant…", "la quantité d'eau et de sels minéraux", "le nombre de globules rouges", "la quantité de bile", "le rythme du cœur", "Si on boit beaucoup, les reins rejettent plus d'eau; si on en manque, ils en gardent."],
+["exc", "Pourquoi produit-on plus d'urine quand on boit beaucoup d'eau ?", "Les reins éliminent le surplus d'eau", "L'estomac se vide dans la vessie", "Les poumons envoient l'eau aux reins", "L'eau passe directement de l'intestin à la vessie", "L'eau bue est absorbée dans le sang avant d'être filtrée par les reins."],
+["exc", "Que se passe-t-il si les reins cessent de fonctionner ?", "Les déchets s'accumulent dans le sang", "Le sang devient plus propre", "L'urine devient plus claire", "La digestion s'arrête", "Sans traitement, l'accumulation de déchets devient dangereuse pour la santé."],
+["exc", "Qu'est-ce que la dialyse ?", "Un traitement qui filtre le sang à la place des reins", "Un examen de la vue", "Un vaccin contre les infections urinaires", "Une opération pour retirer la vessie", "Les personnes dont les reins ne fonctionnent plus suivent souvent ce traitement plusieurs fois par semaine."],
+["exc", "Dans quel ordre l'urine circule-t-elle ?", "Rein → uretère → vessie → urètre", "Rein → urètre → vessie → uretère", "Vessie → rein → uretère → urètre", "Uretère → rein → vessie → urètre", "Truc : uretère vient avant vessie, urètre vient après."],
+["exc", "D'où provient l'urée ?", "De la dégradation des protéines", "De la digestion des glucides", "Des globules rouges usés", "De la bile", "Le foie fabrique l'urée; les reins la retirent ensuite du sang."],
+["exc", "Où se trouvent les reins ?", "Dans le bas du dos, de chaque côté de la colonne vertébrale", "À l'avant du ventre, sous le nombril", "Dans le bassin, sous la vessie", "Dans la cage thoracique, près du cœur", "Ils sont protégés en partie par les dernières côtes."],
+["ner", "Quelle partie de l'encéphale permet de penser, de mémoriser et de faire des mouvements volontaires ?", "Le cerveau", "Le cervelet", "Le bulbe rachidien", "La moelle épinière", "Le cerveau est la plus grosse partie de l'encéphale."],
+["ner", "De quoi est formé le système nerveux périphérique ?", "Des nerfs", "De l'encéphale", "De la moelle épinière", "Des organes internes", "Les nerfs relient le système nerveux central à toutes les parties du corps."],
+["ner", "Quel nerf transmet au cerveau les messages captés par l'oreille ?", "Le nerf auditif", "Le nerf optique", "Le nerf olfactif", "Un nerf moteur", "C'est le cerveau qui interprète ensuite ces messages comme des sons."],
+["ner", "Quelle partie de l'œil fait la mise au point de l'image sur la rétine ?", "Le cristallin", "L'iris", "La pupille", "La rétine", "Le cristallin change de forme pour voir net de près ou de loin."],
+["ner", "Comment s'appelle l'ouverture au centre de l'iris ?", "La pupille", "La cornée", "Le cristallin", "La rétine", "La pupille paraît noire parce que la lumière qui y entre n'en ressort presque pas."],
+["ner", "Quelle partie de l'oreille se met à vibrer en premier quand un son arrive ?", "Le tympan", "La cochlée", "Les osselets", "Le nerf auditif", "Le tympan est une fine membrane au fond du conduit auditif."],
+["ner", "Dans quelle partie de l'oreille les vibrations sont-elles transformées en messages nerveux ?", "La cochlée", "Le tympan", "Les osselets", "Le conduit auditif", "La cochlée, en forme d'escargot, est dans l'oreille interne."],
+["ner", "Quel est le rôle des osselets de l'oreille ?", "Transmettre et amplifier les vibrations du tympan", "Garder l'équilibre", "Produire le cérumen", "Envoyer le message au cerveau", "Les trois osselets (marteau, enclume, étrier) sont les plus petits os du corps."],
+["ner", "Où se trouvent les récepteurs du goût ?", "Dans les papilles de la langue", "Dans les fosses nasales", "Dans les dents", "Dans le pharynx", "Le goût et l'odorat travaillent ensemble : c'est pourquoi on goûte moins quand on a le nez bouché."],
+["ner", "Où se trouvent les récepteurs de l'odorat ?", "Dans le haut des fosses nasales", "Sur la langue", "Dans le pharynx", "Dans les poumons", "Ces récepteurs captent les molécules odorantes transportées par l'air."],
+["ner", "Quel organe des sens contient des récepteurs du toucher, de la chaleur, du froid et de la douleur ?", "La peau", "La langue", "L'œil", "L'oreille", "Ces récepteurs sont plus nombreux au bout des doigts et sur les lèvres."],
+["ner", "Quels nerfs transmettent les ordres du système nerveux central vers les muscles ?", "Les nerfs moteurs", "Les nerfs sensitifs", "Le nerf optique", "Les nerfs olfactifs", "Les nerfs sensitifs font le trajet inverse, des récepteurs vers le système nerveux central."],
+["ner", "Lequel de ces gestes est un acte volontaire ?", "Lever la main pour répondre en classe", "Retirer sa main d'une plaque chaude", "La jambe qui se soulève quand on frappe sous le genou", "Cligner des yeux quand un objet arrive vers le visage", "Un acte volontaire est commandé par le cerveau; les autres exemples sont des réflexes."],
+["ner", "Quelle partie du neurone conduit l'influx nerveux vers le neurone suivant ?", "L'axone", "Les dendrites", "Le noyau", "Le corps cellulaire", "L'axone peut être très long : certains vont de la moelle épinière jusqu'au pied."],
+["ner", "Qu'est-ce que la colonne vertébrale protège ?", "La moelle épinière", "Le cerveau", "Les poumons", "Le cœur", "La moelle épinière passe dans un canal formé par l'empilement des vertèbres."],
+["ner", "Quelle couche transparente, à l'avant de l'œil, laisse entrer la lumière ?", "La cornée", "L'iris", "La rétine", "Le nerf optique", "La cornée protège aussi l'avant de l'œil."],
+["mus", "Quelles sont les trois grandes fonctions du squelette ?", "Soutenir le corps, protéger les organes et permettre le mouvement", "Digérer, respirer et filtrer", "Produire la bile, l'urine et la sueur", "Voir, entendre et sentir", "Les os fabriquent aussi les cellules sanguines et gardent une réserve de calcium."],
+["mus", "Quels organes la cage thoracique protège-t-elle ?", "Le cœur et les poumons", "L'estomac et l'intestin", "Le cerveau", "La vessie", "Elle est formée des côtes, du sternum et d'une partie de la colonne vertébrale."],
+["mus", "Quel est le plus long os du corps humain ?", "Le fémur", "Le tibia", "L'humérus", "La colonne vertébrale", "Le fémur est l'os de la cuisse."],
+["mus", "Comment s'appellent les os qui forment la colonne vertébrale ?", "Les vertèbres", "Les phalanges", "Les côtes", "Les osselets", "La colonne compte 33 vertèbres, dont certaines sont soudées au bas du dos."],
+["mus", "Plier le coude est un mouvement de…", "flexion", "extension", "rotation", "abduction", "La flexion diminue l'angle entre deux os."],
+["mus", "Déplier la jambe est un mouvement de…", "extension", "flexion", "rotation", "adduction", "L'extension augmente l'angle entre deux os."],
+["mus", "Tourner la tête de gauche à droite pour dire non est un mouvement de…", "rotation", "flexion", "extension", "abduction", "La rotation fait tourner un os autour de son axe."],
+["mus", "Écarter le bras du corps, sur le côté, est un mouvement…", "d'abduction", "d'adduction", "de flexion", "de rotation", "L'adduction est le mouvement inverse : ramener le bras vers le corps."],
+["mus", "Quel type de muscle est strié mais involontaire ?", "Le muscle cardiaque", "Le muscle squelettique", "Le muscle lisse", "Le tendon", "Le cœur bat sans qu'on ait à y penser."],
+["mus", "Les vertèbres sont reliées entre elles par des articulations…", "semi-mobiles", "immobiles", "très mobiles", "soudées", "Chaque vertèbre bouge peu, mais ensemble elles permettent de plier le dos."],
+["mus", "Comment s'appellent les os des doigts ?", "Les phalanges", "Les vertèbres", "Les osselets", "Les côtes", "Chaque doigt a trois phalanges, sauf le pouce qui en a deux."],
+["mus", "Pourquoi l'activité physique est-elle bonne pour les os ?", "Elle les rend plus denses et plus solides", "Elle les rend plus longs", "Elle remplace le calcium", "Elle les rend plus flexibles comme du cartilage", "Les os se renforcent quand on les sollicite, par exemple en courant ou en sautant."],
+["mus", "Quand un muscle se contracte, il…", "raccourcit et tire sur l'os", "s'allonge et pousse l'os", "durcit sans bouger l'os", "se détache de l'os", "C'est le tendon qui transmet cette traction à l'os."],
+["mus", "Combien de types de muscles le corps humain possède-t-il ?", "3", "2", "4", "6", "Les muscles squelettiques, lisses et cardiaque."],
+["mus", "Qu'est-ce qu'une entorse ?", "Un étirement ou une déchirure d'un ligament", "Une fracture d'un os", "Une déchirure d'un muscle", "Une infection d'une articulation", "Les entorses de la cheville sont très fréquentes dans les sports."],
+["mus", "Quel os protège le cerveau ?", "Le crâne", "Le sternum", "Le bassin", "L'omoplate", "Le crâne est formé de plusieurs os soudés entre eux."],
+["rep", "Comment appelle-t-on la période où le corps devient capable de se reproduire ?", "La puberté", "La ménopause", "La grossesse", "L'ovulation", "La puberté commence généralement entre 8 et 14 ans et varie beaucoup d'une personne à l'autre."],
+["rep", "Quelles hormones produites par les ovaires participent à la puberté chez les filles ?", "Les œstrogènes", "La testostérone", "L'insuline", "L'adrénaline", "La progestérone, aussi produite par les ovaires, joue un rôle dans le cycle menstruel."],
+["rep", "Qu'est-ce que la fécondation ?", "L'union d'un spermatozoïde et d'un ovule", "La libération d'un ovule par l'ovaire", "L'implantation de l'embryon dans l'utérus", "La division d'une cellule en deux", "Un seul spermatozoïde peut féconder un ovule."],
+["rep", "Comment appelle-t-on la cellule formée par la fécondation ?", "Le zygote (la cellule-œuf)", "Un gamète", "Le fœtus", "Le placenta", "Le zygote se divise ensuite par mitose pour former l'embryon."],
+["rep", "Que sont les menstruations ?", "L'élimination de la paroi de l'utérus quand il n'y a pas eu de fécondation", "La libération d'un ovule", "La production de spermatozoïdes", "L'implantation d'un embryon", "Elles marquent le premier jour d'un nouveau cycle."],
+["rep", "Combien de temps dure une grossesse en moyenne ?", "Environ 9 mois (40 semaines)", "Environ 6 mois", "Environ 12 mois", "Environ 3 mois", "Les semaines sont comptées à partir du premier jour des dernières menstruations."],
+["rep", "À partir d'environ quand l'embryon est-il appelé fœtus ?", "Vers la 8e semaine", "Dès la fécondation", "À la naissance", "Au 6e mois", "À ce moment, tous les organes principaux ont commencé à se former."],
+["rep", "Quel est le rôle du cordon ombilical ?", "Relier le fœtus au placenta", "Produire les hormones de la mère", "Protéger le fœtus des chocs", "Fabriquer le lait maternel", "Le nombril est la cicatrice laissée par le cordon ombilical."],
+["rep", "Dans quels conduits les spermatozoïdes voyagent-ils en quittant les testicules ?", "Les canaux déférents", "Les uretères", "Les trompes utérines", "Les vaisseaux lymphatiques", "Ils rejoignent ensuite l'urètre, qui traverse le pénis."],
+["rep", "Laquelle de ces méthodes contraceptives est hormonale ?", "La pilule contraceptive", "Le condom", "Le condom interne", "L'abstinence", "Les méthodes hormonales empêchent l'ovulation, mais ne protègent pas contre les ITSS."],
+["rep", "Que signifie le sigle ITSS ?", "Infection transmissible sexuellement et par le sang", "Infection temporaire sans symptôme", "Inflammation des tissus sexuels", "Infection traitée sans soins", "Plusieurs ITSS ne donnent aucun symptôme : le dépistage est donc important."],
+["rep", "Quelle division cellulaire produit les gamètes ?", "La méiose", "La mitose", "La fécondation", "L'ovulation", "La méiose divise par deux le nombre de chromosomes, de 46 à 23."],
+["rep", "Combien d'ovules sont généralement libérés à chaque cycle menstruel ?", "1", "2", "10", "Des milliers", "Quand deux ovules sont libérés et fécondés, cela peut donner des jumeaux non identiques."],
+["rep", "Comment appelle-t-on des jumeaux issus d'un seul ovule fécondé qui s'est séparé en deux ?", "Des jumeaux identiques", "Des jumeaux non identiques", "Des faux jumeaux", "Des demi-jumeaux", "Ils ont le même matériel génétique."],
+["rep", "Quelle ITSS est causée par un virus qui affaiblit le système immunitaire ?", "Le VIH", "La chlamydia", "La gonorrhée", "La syphilis", "La chlamydia, la gonorrhée et la syphilis sont causées par des bactéries."],
+["rep", "La vasectomie et la ligature des trompes sont des méthodes de contraception…", "permanentes", "temporaires", "qui protègent contre les ITSS", "hormonales", "Elles empêchent les gamètes de se rencontrer."],
+
+["dig", "Combien de dents compte la dentition complète d'un adulte ?", "32", "20", "28", "36", "Les enfants ont 20 dents de lait; les dents de sagesse complètent les 32 dents adultes."],
+["dig", "Quelles dents servent surtout à couper les aliments ?", "Les incisives", "Les canines", "Les molaires", "Les prémolaires", "Les canines déchirent et les molaires broient."],
+["dig", "Quelles dents servent surtout à broyer les aliments ?", "Les molaires", "Les incisives", "Les canines", "Aucune, c'est la langue qui broie", "Les molaires, au fond de la bouche, ont une large surface pour écraser les aliments."],
+["dig", "Quel est le rôle de la langue dans la digestion ?", "Mélanger les aliments avec la salive et les pousser vers le pharynx", "Produire des enzymes digestives", "Absorber les nutriments", "Broyer les aliments", "La langue est un muscle; elle aide aussi à goûter les aliments."],
+["dig", "Pourquoi l'estomac ne se digère-t-il pas lui-même ?", "Une couche de mucus protège sa paroi", "Il n'y a pas d'acide dans l'estomac", "Les enzymes n'agissent que dans la bouche", "La bile neutralise tout l'acide", "Quand cette protection est abîmée, un ulcère peut se former."],
+["dig", "Combien de temps les aliments restent-ils environ dans l'estomac ?", "De 2 à 4 heures", "Quelques secondes", "2 jours", "Une semaine", "Un repas riche en gras reste plus longtemps dans l'estomac."],
+["dig", "Quelle est la longueur approximative de l'intestin grêle d'un adulte ?", "Environ 6 à 7 mètres", "Environ 50 cm", "Environ 1,5 mètre", "Environ 30 mètres", "Il est replié dans l'abdomen; le gros intestin, lui, mesure environ 1,5 mètre."],
+["dig", "Pourquoi l'intestin grêle porte-t-il ce nom ?", "Parce qu'il est plus mince que le gros intestin", "Parce qu'il est plus court que le gros intestin", "Parce qu'il est très fragile", "Parce qu'il digère la glace", "Il est plus étroit, mais beaucoup plus long que le gros intestin."],
+["dig", "Quel est le rôle des bactéries du gros intestin ?", "Elles dégradent certains résidus et produisent des vitamines", "Elles produisent la bile", "Elles digèrent les protéines dans l'estomac", "Elles causent toujours des maladies", "Ces bactéries utiles forment le microbiote intestinal; elles produisent notamment de la vitamine K."],
+["dig", "Dans quel organe se termine la digestion chimique des aliments ?", "L'intestin grêle", "L'estomac", "Le gros intestin", "La bouche", "Les nutriments sont ensuite absorbés à travers la paroi de l'intestin grêle."],
+["dig", "Dans quel organe commence la digestion chimique des protéines ?", "L'estomac", "La bouche", "L'intestin grêle", "Le gros intestin", "Le suc gastrique contient une enzyme qui commence à couper les protéines."],
+["dig", "Qu'est-ce que la déglutition ?", "L'action d'avaler", "L'action de mastiquer", "L'absorption des nutriments", "L'évacuation des selles", "Pendant la déglutition, l'épiglotte ferme le chemin vers la trachée."],
+["dig", "Laquelle de ces substances est un minéral ?", "Le calcium", "La vitamine C", "Le glucose", "L'amidon", "Le fer, le sodium et le potassium sont d'autres minéraux importants."],
+["dig", "Environ quelle proportion du corps humain est formée d'eau ?", "Environ 60 %", "Environ 10 %", "Environ 30 %", "Environ 95 %", "C'est pourquoi boire régulièrement est essentiel."],
+["dig", "Pourquoi est-il utile de bien mastiquer ?", "Les petits morceaux sont plus facilement attaqués par les enzymes", "Cela fait grossir les aliments", "Cela évite que l'estomac produise de l'acide", "Cela permet d'absorber les nutriments dans la bouche", "Mastiquer augmente la surface des aliments en contact avec les sucs digestifs."],
+["dig", "Selon le Guide alimentaire canadien, quelle portion de l'assiette devrait être formée de légumes et de fruits ?", "La moitié", "Le quart", "Le dixième", "L'assiette au complet", "Le guide propose un quart d'aliments protéinés et un quart d'aliments à grains entiers."],
+["dig", "Les vitamines sont nécessaires au corps…", "en petites quantités, pour son bon fonctionnement", "en grandes quantités, pour fournir de l'énergie", "seulement pendant l'enfance", "seulement pour construire les os", "Les vitamines ne fournissent pas d'énergie, mais elles sont indispensables à de nombreuses fonctions."],
+["dig", "Quelle est la plus grosse glande du corps humain ?", "Le foie", "Le pancréas", "L'estomac", "La rate", "Le foie pèse environ 1,5 kg chez l'adulte."],
+["dig", "Où se trouve l'appendice ?", "Au début du gros intestin", "Au bout de l'œsophage", "Sur le foie", "Dans l'estomac", "Quand l'appendice s'infecte, c'est une appendicite."],
+["dig", "Comment appelle-t-on la bouillie formée dans l'estomac ?", "Le chyme", "Le bol alimentaire", "La bile", "Les selles", "Le chyme passe ensuite petit à petit dans le duodénum."],
+["dig", "Comment appelle-t-on la boule d'aliments mâchés et imbibés de salive que l'on avale ?", "Le bol alimentaire", "Le chyme", "Une villosité", "Le suc gastrique", "Le bol alimentaire descend l'œsophage jusqu'à l'estomac."],
+["dig", "Quelle partie du gros intestin garde les selles en réserve avant leur évacuation ?", "Le rectum", "Le côlon", "Le duodénum", "L'appendice", "Les selles sont ensuite évacuées par l'anus."],
+["dig", "Lequel de ces aliments est une bonne source de protéines ?", "Les lentilles", "Le riz blanc", "Les pommes", "L'huile d'olive", "Les légumineuses (lentilles, pois chiches, haricots) sont riches en protéines."],
+["dig", "En quoi consiste l'absorption des nutriments ?", "À les faire passer du tube digestif vers le sang", "À les couper en petits morceaux", "À les éliminer dans les selles", "À les transformer en bile", "L'absorption se fait surtout à travers les villosités de l'intestin grêle."],
+["res", "Lequel des deux poumons compte trois lobes ?", "Le poumon droit", "Le poumon gauche", "Les deux poumons", "Aucun des deux", "Le poumon gauche n'a que deux lobes, pour laisser de la place au cœur."],
+["res", "Environ combien de respirations par minute un adolescent fait-il au repos ?", "De 12 à 20", "De 2 à 4", "De 60 à 80", "De 100 à 120", "Ce rythme augmente pendant un effort physique."],
+["res", "Quelle structure osseuse protège les poumons ?", "La cage thoracique", "Le crâne", "Le bassin", "La colonne vertébrale seulement", "Les côtes, le sternum et les vertèbres forment la cage thoracique."],
+["res", "Quel est le rôle des poils du nez ?", "Retenir les grosses poussières", "Réchauffer l'air", "Produire du mucus", "Capter les odeurs", "Le mucus retient ensuite les particules plus fines."],
+["res", "Pourquoi l'air se réchauffe-t-il dans les fosses nasales ?", "Elles sont tapissées de nombreux vaisseaux sanguins", "Elles contiennent de l'acide", "Les poils produisent de la chaleur", "L'air frotte contre les os", "Le sang chaud qui circule près de la surface réchauffe l'air inspiré."],
+["res", "Quelle quantité d'air les poumons d'un adulte peuvent-ils contenir au maximum ?", "Environ 5 à 6 litres", "Environ 1 litre", "Environ 20 litres", "Environ 100 millilitres", "Au repos, on n'inspire qu'environ un demi-litre d'air à chaque respiration."],
+["res", "Qu'est-ce que la respiration cellulaire ?", "La production d'énergie dans les cellules à partir du glucose et du dioxygène", "L'entrée de l'air dans les poumons", "L'échange de gaz dans les alvéoles", "Le mouvement du diaphragme", "Elle se fait dans toutes les cellules du corps, surtout dans les mitochondries."],
+["res", "Que produit la respiration cellulaire ?", "Du dioxyde de carbone, de l'eau et de l'énergie", "Du glucose et du dioxygène", "De l'urée et de l'eau", "De la bile et du CO₂", "Le CO₂ produit est transporté par le sang jusqu'aux poumons, qui le rejettent."],
+["res", "Que se passe-t-il quand on avale de travers ?", "Un morceau entre dans le larynx et on tousse pour l'expulser", "L'œsophage se bouche complètement", "L'estomac renvoie l'aliment", "Les poumons digèrent l'aliment", "La toux est un réflexe qui protège les voies respiratoires."],
+["res", "Pourquoi la voix des garçons devient-elle plus grave à la puberté ?", "Le larynx grossit et les cordes vocales s'allongent", "Les poumons rapetissent", "La trachée se bouche", "Le diaphragme devient plus fort", "Ce changement est causé par la testostérone."],
+["res", "À quoi sert la toux ?", "À expulser des particules ou du mucus des voies respiratoires", "À faire entrer plus d'air", "À réchauffer les poumons", "À vider l'estomac", "Il vaut mieux tousser dans son coude pour ne pas répandre de microbes."],
+["res", "À quoi sert l'éternuement ?", "À expulser ce qui irrite le nez", "À faire entrer du dioxygène plus vite", "À nettoyer l'estomac", "À reposer les poumons", "Un éternuement peut projeter des gouttelettes à plusieurs mètres."],
+["res", "Quelle maladie est une inflammation des bronches qui cause une toux grasse ?", "La bronchite", "L'appendicite", "La gastrite", "L'otite", "Une bronchite est souvent causée par un virus."],
+["res", "La pneumonie est une infection…", "des poumons", "de l'estomac", "de l'oreille", "des reins", "Les alvéoles se remplissent de liquide, ce qui nuit aux échanges gazeux."],
+["res", "Pourquoi le monoxyde de carbone (CO) est-il si dangereux ?", "Il prend la place du dioxygène sur l'hémoglobine", "Il bouche la trachée", "Il détruit les os", "Il fait grossir les poumons", "Ce gaz est invisible et sans odeur : un détecteur de CO à la maison peut sauver des vies."],
+["res", "Pourquoi est-il plus difficile de respirer en haute montagne ?", "Chaque inspiration contient moins de dioxygène", "L'air contient plus de CO₂", "L'air contient plus de diazote", "Les poumons gèlent", "En altitude, l'air est moins dense : il y a moins de molécules de dioxygène dans un même volume."],
+["res", "Que mesure un spiromètre ?", "Le volume d'air que l'on peut inspirer ou expirer", "Le nombre de battements du cœur", "La quantité de sang dans les poumons", "La température de l'air expiré", "On l'utilise pour évaluer la capacité pulmonaire."],
+["res", "Dans quel ordre le CO₂ quitte-t-il le corps ?", "Sang → alvéoles → bronchioles → bronches → trachée", "Alvéoles → sang → bronches → bronchioles → trachée", "Sang → trachée → bronches → bronchioles → alvéoles", "Bronches → sang → alvéoles → trachée → bronchioles", "Il prend le chemin inverse de l'air inspiré."],
+["res", "Que fait le diaphragme pendant une expiration au repos ?", "Il se relâche et remonte", "Il se contracte et s'abaisse", "Il se contracte et remonte", "Il reste complètement immobile", "Le volume de la cage thoracique diminue et l'air est poussé vers l'extérieur."],
+["res", "Pourquoi y a-t-il environ 300 millions d'alvéoles dans les poumons ?", "Pour offrir une immense surface d'échange", "Pour stocker de la nourriture", "Pour produire du sang", "Pour filtrer l'urine", "Étalées, les alvéoles couvriraient environ la surface d'un terrain de tennis."],
+["res", "Comment les gaz passent-ils entre les alvéoles et le sang ?", "Par diffusion, de l'endroit le plus concentré vers le moins concentré", "Grâce à une pompe dans chaque alvéole", "Par filtration, comme dans les reins", "Par digestion", "Le dioxygène est plus concentré dans l'alvéole que dans le sang : il diffuse donc vers le sang."],
+["res", "Pourquoi le sang qui quitte les poumons est-il rouge vif ?", "Il est riche en dioxygène", "Il contient plus de globules blancs", "Il contient plus de CO₂", "Il est plus chaud", "Le sang pauvre en dioxygène est d'un rouge plus foncé."],
+["res", "Quelle habitude améliore la capacité respiratoire ?", "Faire de l'exercice physique régulièrement", "Fumer", "Rester assis toute la journée", "Respirer seulement par la bouche", "L'activité physique renforce le diaphragme et les muscles intercostaux."],
+["res", "Comment les cordes vocales produisent-elles des sons ?", "L'air expiré les fait vibrer", "L'air inspiré les fait vibrer", "La langue les frappe", "Le diaphragme les touche", "La bouche, la langue et les lèvres transforment ensuite ces sons en paroles."],
+["res", "Pourquoi le vapotage peut-il nuire aux voies respiratoires ?", "On inhale des produits irritants et souvent de la nicotine", "Il ne contient que de la vapeur d'eau", "Il nettoie les poumons", "Il renforce les cils des bronches", "La nicotine crée aussi une dépendance, surtout chez les adolescents."],
+["cir", "Quel est le rôle principal du système circulatoire ?", "Transporter des substances comme le dioxygène, les nutriments et les déchets", "Digérer les aliments", "Produire des hormones", "Filtrer l'air", "Le cœur sert de pompe et les vaisseaux sanguins forment un réseau dans tout le corps."],
+["cir", "Où peut-on facilement prendre son pouls ?", "Au poignet ou au cou", "Au genou", "Au coude", "Au nombril", "On y sent une artère près de la surface de la peau."],
+["cir", "Que mesure la pression artérielle ?", "La force exercée par le sang sur la paroi des artères", "Le nombre de globules rouges", "La vitesse de la respiration", "La quantité de dioxygène dans l'air", "Une pression trop élevée, l'hypertension, fatigue le cœur et les vaisseaux."],
+["cir", "Pourquoi les artères ont-elles une paroi épaisse et élastique ?", "Pour résister à la forte pression du sang propulsé par le cœur", "Pour ralentir le sang", "Pour laisser passer les nutriments", "Pour filtrer le sang", "Les veines, où la pression est plus faible, ont une paroi plus mince."],
+["cir", "Comment le sang des jambes remonte-t-il vers le cœur malgré la gravité ?", "Grâce aux valvules des veines et aux muscles des jambes", "Grâce aux poumons", "Grâce aux capillaires qui le poussent", "Il ne remonte jamais", "Bouger les jambes aide le sang à remonter : c'est pourquoi on conseille de bouger lors des longs trajets."],
+["cir", "Environ combien de fois le cœur bat-il en une journée ?", "Environ 100 000 fois", "Environ 1 000 fois", "Environ 10 000 fois", "Environ 10 millions de fois", "Cela fait environ 70 battements par minute, jour et nuit."],
+["cir", "Qu'est-ce qu'une crise cardiaque ?", "Une partie du muscle cardiaque manque de sang et de dioxygène", "Une infection des poumons", "Une fracture de la cage thoracique", "Un manque de globules blancs", "Elle survient souvent quand une artère qui nourrit le cœur se bouche."],
+["cir", "Quels vaisseaux nourrissent le muscle du cœur lui-même ?", "Les artères coronaires", "L'aorte seulement", "Les veines caves", "Les artères pulmonaires", "Le cœur a besoin de son propre apport de sang pour fonctionner."],
+["cir", "Quelles cellules sanguines n'ont pas de noyau chez l'humain ?", "Les globules rouges", "Les globules blancs", "Les lymphocytes", "Les neurones", "Sans noyau, les globules rouges ont plus de place pour l'hémoglobine."],
+["cir", "Que se passe-t-il si une personne reçoit du sang incompatible ?", "Ses anticorps s'attaquent aux globules rouges reçus", "Rien du tout", "Son sang change de groupe", "Ses plaquettes disparaissent", "Les globules rouges reçus s'agglutinent, ce qui peut être très dangereux."],
+["cir", "Quels anticorps trouve-t-on dans le plasma d'une personne du groupe O ?", "Des anticorps anti-A et anti-B", "Aucun anticorps", "Seulement des anticorps anti-A", "Des anticorps anti-O", "C'est pourquoi une personne du groupe O ne peut recevoir que du sang de groupe O."],
+["cir", "Pourquoi évite-t-on de donner du sang Rh+ à une personne Rh− ?", "Son corps peut produire des anticorps contre l'antigène Rh", "Le sang Rh+ est toujours malade", "Le facteur Rh change le groupe ABO", "Le sang Rh+ ne transporte pas d'oxygène", "Une personne Rh− reçoit donc normalement du sang Rh−."],
+["cir", "Quel est le groupe sanguin le plus fréquent au Québec ?", "O+", "AB−", "B−", "A−", "Environ 4 personnes sur 10 sont du groupe O+."],
+["cir", "Pourquoi les dons de sang sont-ils essentiels ?", "Le sang ne peut pas être fabriqué en laboratoire", "Le corps ne refait jamais son sang", "Le sang sert à fabriquer des vaccins", "Il remplace les médicaments", "Au Québec, Héma-Québec recueille les dons de sang."],
+["cir", "Dans quelle cavité du cœur arrive le sang oxygéné qui vient des poumons ?", "L'oreillette gauche", "L'oreillette droite", "Le ventricule droit", "Le ventricule gauche", "Il passe ensuite dans le ventricule gauche, qui l'envoie dans l'aorte."],
+["cir", "De quelle cavité du cœur part le sang envoyé aux poumons ?", "Le ventricule droit", "Le ventricule gauche", "L'oreillette gauche", "L'oreillette droite", "Il quitte le cœur par l'artère pulmonaire."],
+["cir", "Que produit le « toc-toc » qu'on entend avec un stéthoscope ?", "La fermeture des valvules du cœur", "Le sang qui coule dans les capillaires", "Les globules qui se frappent", "L'air qui entre dans le cœur", "Chaque battement fait deux bruits : un pour chaque groupe de valvules qui se ferme."],
+["cir", "Dans la grande circulation, quelle différence y a-t-il entre le sang des artères et celui des veines ?", "Artères : riche en dioxygène; veines : pauvre en dioxygène", "Artères : pauvre en dioxygène; veines : riche en dioxygène", "Aucune différence", "Les artères ne contiennent que du plasma", "Dans la petite circulation, c'est l'inverse : l'artère pulmonaire transporte du sang pauvre en dioxygène."],
+["cir", "Pourquoi les veines paraissent-elles bleues à travers la peau ?", "C'est un effet de la lumière : le sang est toujours rouge", "Le sang des veines est bleu", "Les veines contiennent un liquide bleu", "Le sang devient bleu en touchant l'air", "Même pauvre en dioxygène, le sang reste rouge foncé."],
+["cir", "Qu'est-ce que l'anémie ?", "Un manque de globules rouges ou d'hémoglobine", "Un excès de globules blancs", "Une infection du cœur", "Une maladie des os", "Une personne anémique est souvent pâle et fatiguée."],
+["cir", "Quel minéral est essentiel pour fabriquer l'hémoglobine ?", "Le fer", "Le calcium", "Le sodium", "L'iode", "On trouve du fer dans la viande rouge, les légumineuses et les légumes vert foncé."],
+["cir", "Comment appelle-t-on la formation d'un bouchon de sang qui arrête un saignement ?", "La coagulation", "La circulation", "La filtration", "La digestion", "Les plaquettes et des protéines du plasma forment ensemble ce bouchon."],
+["cir", "Pourquoi l'activité physique régulière est-elle bonne pour le cœur ?", "Elle renforce le muscle cardiaque", "Elle fait grossir les veines", "Elle diminue le nombre de globules rouges", "Elle arrête le cœur pendant le repos", "Un cœur entraîné pompe plus de sang à chaque battement."],
+["cir", "Quel est le trajet du sang dans la petite circulation ?", "Ventricule droit → artère pulmonaire → poumons → veines pulmonaires → oreillette gauche", "Ventricule gauche → aorte → poumons → veines caves → oreillette droite", "Oreillette droite → poumons → aorte → ventricule gauche", "Ventricule droit → veines pulmonaires → poumons → artère pulmonaire → oreillette gauche", "Cette boucle sert à recharger le sang en dioxygène."],
+["lym", "Quel organe situé derrière le sternum aide certains lymphocytes à devenir matures ?", "Le thymus", "La thyroïde", "Le pancréas", "La rate", "Le thymus est surtout actif pendant l'enfance et l'adolescence."],
+["lym", "Que contient généralement un vaccin ?", "Un microbe affaibli ou inactivé, ou une partie de microbe", "Des anticorps déjà fabriqués", "Des antibiotiques", "Des globules blancs d'un donneur", "Certains vaccins récents contiennent plutôt les instructions pour fabriquer une partie du microbe (ARN messager)."],
+["lym", "Pourquoi certains vaccins demandent-ils des doses de rappel ?", "Pour stimuler à nouveau la mémoire du système immunitaire", "Parce que le vaccin s'évapore", "Pour remplacer les globules rouges", "Parce que le premier vaccin était inutile", "Le rappel renforce et prolonge la protection."],
+["lym", "Quelle est une différence entre une bactérie et un virus ?", "Une bactérie est une cellule; un virus doit entrer dans une cellule pour se reproduire", "Un virus est plus gros qu'une bactérie", "Les bactéries sont toujours dangereuses", "Les virus se soignent avec des antibiotiques", "Un virus est beaucoup plus petit qu'une bactérie."],
+["lym", "Laquelle de ces maladies est causée par un virus ?", "La grippe", "L'angine streptococcique", "La tuberculose", "La salmonellose", "Le rhume, la varicelle et la COVID-19 sont aussi causés par des virus."],
+["lym", "Laquelle de ces maladies est causée par une bactérie ?", "L'angine streptococcique", "La grippe", "Le rhume", "La varicelle", "Elle peut donc être traitée avec des antibiotiques."],
+["lym", "Qu'est-ce que la fièvre ?", "Une hausse de la température du corps qui aide à combattre une infection", "Un manque de globules blancs", "Une allergie à la chaleur", "Une infection de la peau", "Une fièvre très élevée ou qui dure doit être vue par un professionnel de la santé."],
+["lym", "Pourquoi une plaie infectée devient-elle rouge, chaude et enflée ?", "Plus de sang et de globules blancs arrivent pour combattre les microbes", "La peau fabrique des anticorps", "Les os se réparent", "Le sang coagule trop", "C'est la réaction inflammatoire."],
+["lym", "Que sont les muqueuses ?", "Des couches humides qui tapissent l'intérieur du nez, de la bouche et des voies respiratoires", "Des ganglions situés dans le cou", "Des globules blancs", "Des vaisseaux lymphatiques", "Leur mucus emprisonne les microbes."],
+["lym", "Comment les larmes et la salive aident-elles à combattre les microbes ?", "Elles contiennent des substances qui détruisent certains microbes", "Elles produisent des anticorps", "Elles transportent les globules rouges", "Elles réchauffent les microbes", "Elles font partie de la première ligne de défense."],
+["lym", "Qu'est-ce que l'immunité collective ?", "Une protection indirecte quand une grande partie de la population est immunisée", "Un vaccin donné à une seule personne", "Un groupe de globules blancs", "Une maladie qui touche toute une classe", "Elle protège les personnes qui ne peuvent pas être vaccinées."],
+["lym", "Qu'est-ce que la résistance aux antibiotiques ?", "Des bactéries qui ne sont plus détruites par un antibiotique", "Des virus qui deviennent des bactéries", "Un corps qui refuse les vaccins", "Un antibiotique trop fort", "Prendre des antibiotiques seulement lorsqu'ils sont prescrits aide à limiter ce problème."],
+["lym", "Qu'est-ce qu'une pandémie ?", "Une épidémie qui s'étend à plusieurs continents", "Une maladie qui touche une seule personne", "Une infection de la peau", "Une allergie saisonnière", "La COVID-19 est un exemple récent de pandémie."],
+["lym", "Par où des anticorps de la mère peuvent-ils passer au bébé ?", "Par le placenta et par le lait maternel", "Par les poumons", "Par les vaccins du père", "Par la peau seulement", "Ces anticorps protègent le bébé pendant ses premiers mois."],
+["lym", "Quel est un rôle de la rate ?", "Filtrer le sang et éliminer les vieux globules rouges", "Produire la bile", "Fabriquer l'urine", "Digérer les graisses", "La rate contient aussi beaucoup de globules blancs."],
+["lym", "Lequel de ces gestes NE prévient PAS la transmission des infections ?", "Partager sa bouteille d'eau", "Se laver les mains", "Tousser dans son coude", "Se faire vacciner", "Les microbes de la salive passent facilement d'une personne à l'autre."],
+["lym", "Pourquoi recommande-t-on de tousser dans son coude ?", "Pour éviter de contaminer ses mains et ce qu'on touche", "Pour protéger ses poumons", "Pour tousser moins fort", "Pour produire des anticorps", "Les mains contaminées transmettent facilement les microbes."],
+["lym", "Comment appelle-t-on une réaction allergique grave qui peut bloquer la respiration ?", "Un choc anaphylactique", "Une indigestion", "Une crise d'asthme légère", "Une entorse", "On la traite d'urgence avec un auto-injecteur d'épinéphrine, puis on appelle le 911."],
+["lym", "Qu'est-ce qui relie les ganglions entre eux ?", "Les vaisseaux lymphatiques", "Les veines", "Les nerfs", "Les tendons", "Les ganglions sont répartis le long de ce réseau."],
+["lym", "Qu'est-ce qu'un microbe ?", "Un organisme microscopique, comme une bactérie", "Un globule blanc", "Une partie du ganglion", "Un type d'anticorps", "On ne peut pas le voir sans microscope."],
+["lym", "Dans quel sens la lymphe circule-t-elle ?", "Des tissus vers le cœur, dans un seul sens", "Du cœur vers les tissus", "Dans les deux sens", "Seulement vers les reins", "Elle n'est pas pompée par le cœur : elle forme un circuit à sens unique."],
+["lym", "Qu'arrive-t-il aux microbes captés par un ganglion lymphatique ?", "Ils sont détruits par les globules blancs", "Ils sont envoyés aux poumons", "Ils deviennent des anticorps", "Ils sont stockés pour toujours", "Les ganglions agissent comme des filtres."],
+["lym", "Quel est l'avantage d'un vaccin par rapport à attraper la maladie ?", "On est protégé sans subir les risques de la maladie", "On devient malade plus vite", "On n'a plus jamais besoin d'anticorps", "Il remplace le système immunitaire", "Le vaccin entraîne le système immunitaire sans danger."],
+["lym", "Lors d'une première infection, combien de temps faut-il environ pour produire beaucoup d'anticorps ?", "Environ 1 à 2 semaines", "Quelques secondes", "Une heure", "Un an", "Lors d'une deuxième rencontre, la réponse est beaucoup plus rapide."],
+["exc", "Environ combien d'urine un adulte produit-il par jour ?", "Environ 1,5 litre", "Environ 100 millilitres", "Environ 10 litres", "Environ 50 litres", "Cette quantité varie selon ce qu'on boit et la chaleur."],
+["exc", "Quelle couleur a normalement l'urine d'une personne bien hydratée ?", "Jaune pâle", "Rouge", "Brun foncé", "Bleue", "Une urine foncée peut indiquer qu'il faut boire davantage."],
+["exc", "Pourquoi faut-il boire davantage quand il fait chaud ?", "On perd plus d'eau par la transpiration", "Les reins arrêtent de fonctionner", "L'estomac a besoin d'eau froide", "Le sang devient plus épais à cause du soleil", "Il faut remplacer l'eau perdue pour éviter la déshydratation."],
+["exc", "Qu'est-ce qu'un calcul rénal, ou pierre au rein ?", "Un petit dépôt solide de minéraux qui se forme dans le rein", "Un rein qui ne fonctionne plus", "Une infection de la vessie", "Un os du bassin", "Un calcul peut être très douloureux lorsqu'il descend dans l'uretère."],
+["exc", "Quelle habitude aide le plus à prévenir les calculs rénaux ?", "Boire suffisamment d'eau", "Manger beaucoup de sel", "Éviter de bouger", "Retenir son urine", "L'eau dilue les minéraux et les empêche de former des cristaux."],
+["exc", "Qu'est-ce qu'une infection urinaire ?", "Une infection, souvent causée par des bactéries, des voies urinaires", "Un manque d'urine", "Une allergie au sel", "Une maladie des poumons", "Elle cause souvent une sensation de brûlure en urinant."],
+["exc", "Quel organe fabrique l'urée à partir des déchets des protéines ?", "Le foie", "Le rein", "La vessie", "Le pancréas", "Les reins retirent ensuite l'urée du sang."],
+["exc", "Pourquoi le corps doit-il éliminer le CO₂ ?", "En trop grande quantité, il rend le sang trop acide", "Il est utile seulement aux plantes", "Il remplace le dioxygène dans les os", "Il colore l'urine", "Les poumons éliminent le CO₂ à chaque expiration."],
+["exc", "Que peut révéler la présence de protéines dans l'urine ?", "Un problème de filtration des reins", "Une bonne hydratation", "Un repas riche en fibres", "Une vessie en santé", "Normalement, les protéines sont trop grosses pour passer dans l'urine."],
+["exc", "Environ combien de temps une personne peut-elle survivre sans boire ?", "Environ 3 jours", "Environ 3 heures", "Environ 3 mois", "Environ 3 ans", "On peut survivre beaucoup plus longtemps sans manger que sans boire."],
+["exc", "Que deviennent la plupart des substances utiles filtrées par le rein, comme l'eau et le glucose ?", "Elles sont réabsorbées dans le sang", "Elles sont toutes éliminées dans l'urine", "Elles sont envoyées au foie", "Elles sont stockées dans la vessie", "Le néphron récupère ce qui est utile et laisse les déchets dans l'urine."],
+["exc", "Pourquoi les reins reçoivent-ils autant de sang ?", "Pour filtrer le sang de tout le corps plusieurs fois par jour", "Pour digérer les aliments", "Pour fabriquer des globules rouges", "Pour refroidir le cœur", "Environ un cinquième du sang pompé par le cœur passe par les reins."],
+["exc", "Quel déchet est éliminé à la fois par la sueur et par l'urine ?", "L'urée", "Le dioxyde de carbone", "La bile", "Le glucose", "La sueur en contient beaucoup moins que l'urine."],
+["exc", "Comment appelle-t-on l'action d'évacuer l'urine ?", "La miction", "La digestion", "La déglutition", "La filtration", "Elle se fait quand la vessie se contracte et que son sphincter se relâche."],
+["exc", "Qu'est-ce qui permet de retenir volontairement son urine ?", "Un muscle en anneau, le sphincter, qui ferme la sortie de la vessie", "Les reins, qui arrêtent de filtrer", "Les uretères, qui se bouchent", "Le diaphragme", "Les bébés n'ont pas encore appris à contrôler ce muscle."],
+["exc", "Quel effet le café a-t-il souvent sur la production d'urine ?", "Il fait uriner davantage", "Il arrête la production d'urine", "Il colore l'urine en noir", "Il n'a aucun effet sur les reins", "On dit qu'il a un effet diurétique."],
+["exc", "Qu'est-ce qu'une greffe de rein ?", "Le remplacement d'un rein malade par celui d'un donneur", "Un rein artificiel en plastique", "Un médicament pour les reins", "L'ablation de la vessie", "Une personne peut donner un de ses deux reins de son vivant."],
+["exc", "Que permet le don d'organes ?", "De sauver la vie de personnes malades grâce à une greffe", "De fabriquer des vaccins", "De remplacer la dialyse par un médicament", "De produire du sang artificiel", "Au Québec, on peut signer le consentement au don d'organes au dos de sa carte d'assurance maladie."],
+["exc", "Quel système élimine le CO₂ produit par les cellules ?", "Le système respiratoire", "Le système digestif", "Le système nerveux", "Le système reproducteur", "Les poumons sont donc aussi des organes d'excrétion."],
+["exc", "Quel système transporte les déchets des cellules jusqu'aux organes d'excrétion ?", "Le système circulatoire", "Le système nerveux", "Le système musculaire", "Le système reproducteur", "Le sang récolte les déchets dans les capillaires et les apporte aux reins et aux poumons."],
+["exc", "Quels déchets les cellules produisent-elles en utilisant les nutriments ?", "Du CO₂, de l'eau et des déchets azotés", "Du dioxygène et du glucose", "Des vitamines et des minéraux", "De la bile et des enzymes", "Ces déchets doivent être éliminés pour garder le corps en santé."],
+["exc", "Lequel de ces gestes aide à garder les reins en santé ?", "Boire de l'eau et limiter le sel", "Manger beaucoup de sel", "Boire peu d'eau", "Retenir son urine le plus longtemps possible", "Une alimentation équilibrée aide aussi à prévenir les maladies des reins."],
+["exc", "Pourquoi urine-t-on moins pendant un effort intense par temps chaud ?", "Le corps garde son eau parce qu'il en perd beaucoup par la sueur", "Les reins arrêtent complètement", "La vessie se bouche", "L'eau reste dans l'estomac", "C'est un bon moment pour boire régulièrement."],
+["exc", "Qu'est-ce que l'homéostasie ?", "Le maintien de conditions stables à l'intérieur du corps", "L'élimination des selles", "La production de sueur seulement", "Une maladie des reins", "Les reins, les poumons et la peau y participent, par exemple en contrôlant l'eau et la température."],
+["ner", "Quel est le trajet d'un message nerveux lors d'un acte volontaire ?", "Récepteur → nerf sensitif → encéphale → nerf moteur → muscle", "Muscle → nerf moteur → encéphale → nerf sensitif → récepteur", "Récepteur → nerf moteur → moelle épinière → nerf sensitif → muscle", "Encéphale → récepteur → muscle → nerf sensitif", "C'est l'encéphale qui décide de la réponse."],
+["ner", "Lors d'un réflexe, quel est le bon trajet du message nerveux ?", "Récepteur → nerf sensitif → moelle épinière → nerf moteur → muscle", "Récepteur → nerf sensitif → cerveau → nerf moteur → muscle", "Muscle → moelle épinière → récepteur", "Récepteur → nerf moteur → moelle épinière → nerf sensitif → muscle", "Le message ne passe pas d'abord par le cerveau : la réaction est donc très rapide."],
+["ner", "Comment la pupille réagit-elle devant une lumière forte ?", "Elle rétrécit", "Elle s'agrandit", "Elle ne change pas", "Elle se ferme complètement", "Elle limite ainsi la quantité de lumière qui atteint la rétine."],
+["ner", "Qu'est-ce que la myopie ?", "Une difficulté à voir nettement de loin", "Une difficulté à voir de près", "Une incapacité à voir les couleurs", "Une perte totale de la vue", "Des lunettes ou des verres de contact permettent de la corriger."],
+["ner", "Quelles cellules de la rétine permettent de voir les couleurs ?", "Les cônes", "Les bâtonnets", "Les cellules de l'iris", "Les cellules du cristallin", "Les bâtonnets, eux, servent surtout à voir dans la pénombre."],
+["ner", "Quelles cellules de la rétine servent surtout à voir lorsqu'il fait sombre ?", "Les bâtonnets", "Les cônes", "Les cellules de la cornée", "Les cellules de l'iris", "C'est pourquoi on voit mal les couleurs la nuit."],
+["ner", "Comment appelle-t-on l'endroit de la rétine où part le nerf optique et où l'on ne voit rien ?", "La tache aveugle", "La pupille", "L'iris", "Le cristallin", "Le cerveau comble ce petit trou dans l'image, alors on ne le remarque pas."],
+["ner", "Pourquoi les sons très forts peuvent-ils causer une perte d'audition ?", "Ils abîment les cellules sensibles de la cochlée", "Ils cassent les os du crâne", "Ils bouchent le conduit auditif", "Ils assèchent le tympan", "Ces cellules ne se régénèrent pas : il faut protéger ses oreilles."],
+["ner", "Que mesure-t-on en décibels (dB) ?", "L'intensité d'un son", "La couleur de la lumière", "La force d'un muscle", "La vitesse du message nerveux", "Au-delà d'environ 85 dB de façon prolongée, l'ouïe peut être endommagée."],
+["ner", "Pourquoi a-t-on parfois mal aux oreilles en avion ?", "La pression de l'air change de chaque côté du tympan", "L'air est trop froid", "Les osselets se brisent", "Le nerf auditif se fatigue", "Avaler ou bâiller aide à rééquilibrer la pression."],
+["ner", "Quelles saveurs de base la langue peut-elle percevoir ?", "Le sucré, le salé, l'acide, l'amer et l'umami", "Seulement le sucré et le salé", "Seulement le sucré, le salé et l'acide", "Plus de cent saveurs différentes", "Les autres « goûts » viennent surtout de l'odorat."],
+["ner", "Quel rôle joue l'odorat dans le goût des aliments ?", "Il enrichit beaucoup la perception des saveurs", "Il n'a aucun rôle", "Il remplace complètement le goût", "Il sert seulement à détecter la chaleur", "Quand on a le nez bouché, les aliments semblent fades."],
+["ner", "Quel stimulus les récepteurs de l'œil captent-ils ?", "La lumière", "Les sons", "La chaleur", "Les molécules odorantes", "Les récepteurs de la rétine transforment la lumière en messages nerveux."],
+["ner", "Qu'est-ce qu'un stimulus ?", "Un changement dans l'environnement capté par un récepteur", "Un type de neurone", "Une partie de l'encéphale", "Un muscle volontaire", "Une lumière, un son ou une odeur sont des exemples de stimulus."],
+["ner", "Comment appelle-t-on les structures qui captent les stimulus ?", "Les récepteurs sensoriels", "Les nerfs moteurs", "Les muscles", "Les synapses", "On en trouve dans la peau, les yeux, les oreilles, le nez et la langue."],
+["ner", "Qu'est-ce qu'une commotion cérébrale ?", "Une blessure du cerveau causée par un choc", "Une infection de l'oreille", "Une maladie des muscles", "Un manque de sommeil", "Après un choc à la tête dans un sport, il faut arrêter de jouer et consulter."],
+["ner", "Comment appelle-t-on les substances chimiques qui transmettent le message d'un neurone à l'autre ?", "Les neurotransmetteurs", "Les hormones", "Les anticorps", "Les enzymes", "Ils sont libérés dans la synapse."],
+["ner", "Environ combien de neurones l'encéphale humain contient-il ?", "Environ 86 milliards", "Environ 1 000", "Environ 1 million", "Environ 50", "Chaque neurone peut être relié à des milliers d'autres."],
+["ner", "Pourquoi le sommeil est-il important pour le cerveau ?", "Il aide à consolider la mémoire et à récupérer", "Il arrête complètement le cerveau", "Il fait grandir les nerfs", "Il remplace l'alimentation", "Les adolescents ont besoin d'environ 8 à 10 heures de sommeil par nuit."],
+["ner", "Quelle partie de l'œil remplace-t-on lors d'une opération de la cataracte ?", "Le cristallin", "La rétine", "L'iris", "Le nerf optique", "Avec une cataracte, le cristallin devient opaque et la vue s'embrouille."],
+["ner", "Qu'est-ce que le daltonisme ?", "Une difficulté à distinguer certaines couleurs", "Une perte de l'ouïe", "Une difficulté à voir de loin", "Une maladie de la peau", "C'est pour cela que les fiches A, B, C, D ont aussi une forme différente !"],
+["ner", "Pourquoi l'alcool est-il dangereux au volant ?", "Il ralentit la transmission des messages nerveux et les réflexes", "Il améliore les réflexes", "Il agit seulement sur l'estomac", "Il rend la vision plus nette", "Même une petite quantité peut nuire au jugement et aux réactions."],
+["ner", "Quel organe des sens assure à la fois l'ouïe et l'équilibre ?", "L'oreille", "L'œil", "Le nez", "La peau", "La cochlée sert à l'ouïe et les canaux semi-circulaires, à l'équilibre."],
+["ner", "Pourquoi ne sent-on plus son parfum après quelques minutes ?", "Les récepteurs de l'odorat s'habituent à l'odeur", "Le parfum disparaît complètement", "Le nez se bouche", "Le cerveau arrête de fonctionner", "Ce phénomène s'appelle l'adaptation sensorielle."],
+["ner", "Quel est le rôle du conduit auditif ?", "Diriger les sons vers le tympan", "Transformer les sons en messages nerveux", "Garder l'équilibre", "Produire les sons", "Il produit aussi du cérumen qui protège l'oreille."],
+["mus", "Quel est le plus petit os du corps humain ?", "L'étrier, dans l'oreille", "Une phalange du petit orteil", "Le coccyx", "La rotule", "L'étrier mesure environ 3 millimètres."],
+["mus", "Comment s'appelle l'os situé à l'avant du genou ?", "La rotule", "Le tibia", "Le fémur", "Le péroné", "La rotule protège l'articulation du genou."],
+["mus", "Quel est le plus gros muscle du corps humain ?", "Le grand fessier", "Le biceps", "Le cœur", "Le diaphragme", "Il sert notamment à se redresser et à monter des escaliers."],
+["mus", "Quel tendon relie le mollet à l'os du talon ?", "Le tendon d'Achille", "Le tendon rotulien", "Le ligament croisé", "Le tendon du biceps", "C'est le tendon le plus solide du corps."],
+["mus", "Qu'est-ce qu'une fracture ?", "Un os cassé ou fêlé", "Un ligament étiré", "Un muscle contracté", "Une articulation enflée", "On immobilise souvent la fracture avec un plâtre pour que l'os se répare."],
+["mus", "Qu'est-ce qu'une luxation ?", "Un os qui sort de son articulation", "Un os cassé en deux", "Un muscle déchiré", "Un tendon infecté", "L'épaule et les doigts sont souvent touchés."],
+["mus", "Ramener le bras le long du corps est un mouvement…", "d'adduction", "d'abduction", "de flexion", "de rotation", "L'abduction est le mouvement inverse : écarter le membre du corps."],
+["mus", "Comment l'articulation du genou bouge-t-elle surtout ?", "Comme une charnière : en flexion et en extension", "Dans toutes les directions", "Elle est immobile", "Seulement en rotation", "Le coude fonctionne aussi comme une charnière."],
+["mus", "Quel type d'articulation permet à l'épaule de bouger dans presque toutes les directions ?", "Une articulation en rotule (sphérique)", "Une articulation en charnière", "Une articulation immobile", "Une articulation semi-mobile", "La tête arrondie de l'humérus tourne dans une cavité de l'omoplate."],
+["mus", "Quel est le rôle du liquide présent dans les articulations mobiles ?", "Lubrifier l'articulation pour réduire la friction", "Fabriquer les globules rouges", "Durcir les os", "Nourrir les muscles", "Il agit comme l'huile dans une machine."],
+["mus", "Quelle vitamine aide le corps à absorber le calcium ?", "La vitamine D", "La vitamine C", "La vitamine A", "La vitamine B12", "Le soleil permet à la peau de fabriquer de la vitamine D."],
+["mus", "Comment s'appelle la maladie qui rend les os fragiles et poreux, surtout chez les personnes âgées ?", "L'ostéoporose", "L'arthrite", "L'asthme", "L'anémie", "Faire de l'exercice et consommer assez de calcium aident à la prévenir."],
+["mus", "Pourquoi faut-il s'échauffer avant de faire du sport ?", "Pour préparer les muscles et les articulations et réduire les risques de blessure", "Pour fatiguer les muscles", "Pour faire grandir les os", "Pour diminuer le rythme cardiaque", "L'échauffement augmente la température et la circulation dans les muscles."],
+["mus", "Quel muscle permet de déplier le bras au niveau du coude ?", "Le triceps", "Le biceps", "Le deltoïde", "Le pectoral", "Le triceps et le biceps sont des muscles antagonistes."],
+["mus", "Combien de paires de côtes l'humain possède-t-il ?", "12", "6", "10", "24", "Cela fait 24 côtes en tout."],
+["mus", "Quels muscles permettent de sourire ?", "Des muscles squelettiques du visage", "Des muscles lisses", "Le muscle cardiaque", "Aucun muscle", "On contrôle volontairement ces muscles."],
+["mus", "Pourquoi dit-on que l'os est un tissu vivant ?", "Il contient des cellules, reçoit du sang et peut se réparer", "Il bouge tout seul", "Il respire de l'air", "Il ne change jamais", "Une fracture peut se réparer grâce aux cellules de l'os."],
+["mus", "À quoi servent les muscles lisses de l'intestin ?", "À faire avancer les aliments", "À lever les bras", "À faire battre le cœur", "À protéger les os", "Ce mouvement involontaire s'appelle le péristaltisme."],
+["mus", "Quel est le seul os mobile du crâne ?", "La mandibule (mâchoire inférieure)", "Le maxillaire supérieur", "L'os frontal", "L'os occipital", "Elle permet de mâcher et de parler."],
+["mus", "Comment s'appelle l'os plat du haut du dos, à l'arrière de l'épaule ?", "L'omoplate", "Le sternum", "La clavicule", "Le bassin", "On l'appelle aussi la scapula."],
+["mus", "Quels organes le bassin aide-t-il à protéger ?", "La vessie et des organes reproducteurs", "Le cœur et les poumons", "Le cerveau", "L'estomac", "Le bassin supporte aussi le poids du haut du corps."],
+["mus", "Combien d'os compte environ une main humaine ?", "27", "5", "12", "50", "Le poignet, la paume et les doigts contiennent tous plusieurs os."],
+["mus", "Quelle structure entre les vertèbres amortit les chocs ?", "Les disques intervertébraux", "Les ligaments croisés", "La moelle épinière", "Les côtes", "Ces disques de cartilage agissent comme des coussins."],
+["mus", "Pourquoi adopter une bonne posture devant un écran ?", "Pour éviter les douleurs au dos et au cou", "Pour faire grandir les os", "Pour renforcer le cœur", "Pour améliorer la digestion seulement", "Il est aussi conseillé de se lever et de bouger régulièrement."],
+["mus", "En plus du mouvement, quel autre rôle jouent les muscles squelettiques ?", "Maintenir la posture et produire de la chaleur", "Digérer les aliments", "Fabriquer les anticorps", "Filtrer le sang", "Les frissons sont des contractions rapides qui réchauffent le corps."],
+["rep", "Lequel de ces changements apparaît chez tous les adolescents à la puberté ?", "L'apparition de poils sous les bras et au pubis", "La mue de la voix grave", "Le développement des seins", "La fin de la croissance", "Les changements de la puberté varient d'une personne à l'autre, mais la pilosité augmente chez tous."],
+["rep", "Quelle glande, située sous le cerveau, déclenche la puberté ?", "L'hypophyse", "La thyroïde", "Le pancréas", "La glande salivaire", "Elle libère des hormones qui stimulent les testicules ou les ovaires."],
+["rep", "Quelles glandes ajoutent du liquide aux spermatozoïdes pour former le sperme ?", "Les vésicules séminales et la prostate", "Les glandes salivaires", "Le pancréas et le foie", "Les glandes sudoripares", "Ce liquide nourrit et transporte les spermatozoïdes."],
+["rep", "Pourquoi les testicules sont-ils situés à l'extérieur de l'abdomen ?", "Les spermatozoïdes se forment mieux à une température un peu plus basse", "Pour être plus près de la vessie", "Parce qu'ils produisent de l'urine", "Pour mieux respirer", "Ils sont environ 2 à 3 °C plus frais que l'intérieur du corps."],
+["rep", "Environ combien de spermatozoïdes une éjaculation contient-elle ?", "Des millions", "Un seul", "Une dizaine", "Une centaine", "Un seul spermatozoïde réussira à féconder l'ovule."],
+["rep", "Que détecte un test de grossesse ?", "Une hormone produite au début de la grossesse", "Du glucose dans l'urine", "Des anticorps de la mère", "De la testostérone", "Cette hormone apparaît dans l'urine quelques jours après l'implantation de l'embryon."],
+["rep", "Qu'est-ce que la nidation ?", "L'implantation de l'embryon dans la paroi de l'utérus", "La libération de l'ovule", "La rencontre des gamètes", "La naissance du bébé", "Elle a lieu environ une semaine après la fécondation."],
+["rep", "Comment appelle-t-on la période où le bébé se développe dans l'utérus ?", "La gestation", "La puberté", "La ménopause", "L'ovulation", "Chez l'humain, la gestation dure environ 40 semaines."],
+["rep", "Quel est le rôle du liquide amniotique ?", "Protéger le fœtus des chocs et le garder au chaud", "Nourrir directement le fœtus", "Produire les hormones de la grossesse", "Former le cordon ombilical", "Le fœtus baigne dans ce liquide pendant toute la grossesse."],
+["rep", "Comment appelle-t-on la sortie du bébé lors de la naissance ?", "L'accouchement", "La nidation", "L'ovulation", "La fécondation", "Le bébé passe habituellement par le col de l'utérus et le vagin."],
+["rep", "Qu'est-ce que la ménopause ?", "L'arrêt des cycles menstruels, vers la cinquantaine", "Le début de la puberté", "Le premier jour des menstruations", "Une infection de l'utérus", "Les ovaires cessent alors de libérer des ovules."],
+["rep", "Combien de jours durent habituellement les menstruations ?", "De 3 à 7 jours", "Une seule journée", "Environ 14 jours", "Un mois complet", "La durée varie d'une personne à l'autre et d'un cycle à l'autre."],
+["rep", "D'où viennent les jumeaux non identiques ?", "De deux ovules fécondés par deux spermatozoïdes", "D'un seul ovule qui s'est séparé", "D'un ovule fécondé par deux spermatozoïdes", "D'un seul spermatozoïde", "Ils ne se ressemblent pas plus que deux frères et sœurs nés à des moments différents."],
+["rep", "Combien de paires de chromosomes contient une cellule humaine qui n'est pas un gamète ?", "23 paires", "46 paires", "12 paires", "2 paires", "Cela fait 46 chromosomes; les gamètes n'en ont que 23."],
+["rep", "Pendant combien de temps environ un ovule peut-il être fécondé après l'ovulation ?", "Environ 24 heures", "Environ 1 minute", "Environ 1 mois", "Toute la vie", "Après ce délai, l'ovule se dégrade s'il n'est pas fécondé."],
+["rep", "Combien de temps des spermatozoïdes peuvent-ils survivre dans l'utérus et les trompes ?", "Jusqu'à environ 5 jours", "Quelques secondes", "Une heure au maximum", "Plusieurs mois", "C'est pourquoi une grossesse est possible même si la relation a eu lieu quelques jours avant l'ovulation."],
+["rep", "Contre quelle ITSS un vaccin est-il offert aux élèves de 4e année du primaire au Québec ?", "Le VPH (virus du papillome humain)", "La chlamydia", "La gonorrhée", "La syphilis", "Ce vaccin prévient aussi plusieurs cancers."],
+["rep", "Pourquoi le dépistage des ITSS est-il important ?", "Plusieurs ITSS ne causent aucun symptôme", "Les ITSS guérissent toujours seules", "Il protège contre une grossesse", "Il remplace le condom", "Une ITSS non traitée peut causer des complications et se transmettre à d'autres."],
+["rep", "Avec quoi traite-t-on la chlamydia ?", "Des antibiotiques", "Un vaccin", "Rien, elle guérit seule", "Des antidouleurs seulement", "La chlamydia est causée par une bactérie."],
+["rep", "Comment agit surtout la contraception orale d'urgence ?", "Elle retarde ou empêche l'ovulation", "Elle provoque les menstruations", "Elle protège contre les ITSS", "Elle détruit l'embryon implanté", "Elle est plus efficace lorsqu'elle est prise le plus tôt possible."],
+["rep", "Quel est le rôle des trompes utérines ?", "Conduire l'ovule de l'ovaire vers l'utérus", "Produire les ovules", "Produire des hormones mâles", "Évacuer l'urine", "C'est aussi là qu'a habituellement lieu la fécondation."],
+["rep", "Quel est le rôle de l'urètre chez l'homme ?", "Évacuer l'urine et le sperme", "Produire les spermatozoïdes", "Produire la testostérone", "Relier les reins à la vessie", "L'urine et le sperme ne passent jamais en même temps."],
+["rep", "En combien de périodes de trois mois divise-t-on la grossesse ?", "Trois trimestres", "Deux semestres", "Quatre saisons", "Neuf trimestres", "Chaque trimestre correspond à des étapes du développement du fœtus."],
+["rep", "Que doit éviter une personne enceinte pour protéger le fœtus ?", "L'alcool, le tabac et les drogues", "Les fruits et les légumes", "L'eau", "Le sommeil", "Ces substances traversent le placenta et peuvent nuire au développement du fœtus."]
 ];
 const QBANK = RAW.map(r => ({s:r[0], q:r[1], a:r[2], w:[r[3],r[4],r[5]], e:r[6]}));
 
@@ -320,14 +644,30 @@ const ICON = {
   loup:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M10 6l12 14h20L54 6l-3 26-7 12-12 14-12-14-7-12z"/><path d="M22 32l6 3M42 32l-6 3"/><path d="M28 47l4 4 4-4"/></svg>',
   voyante:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M4 32s11-17 28-17 28 17 28 17-11 17-28 17S4 32 4 32z"/><circle cx="32" cy="32" r="8"/><circle cx="32" cy="32" r="2.5" fill="currentColor"/></svg>',
   medecin:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M24 6h16v18h18v16H40v18H24V40H6V24h18z"/></svg>',
-  villageois:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M8 30L32 8l24 22v26H8z"/><path d="M26 56V40h12v16"/></svg>'
+  villageois:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M8 30L32 8l24 22v26H8z"/><path d="M26 56V40h12v16"/></svg>',
+  cupidon:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M32 54S10 40 10 24c0-7 5-12 11-12 5 0 9 3 11 7 2-4 6-7 11-7 6 0 11 5 11 12 0 16-22 30-22 30z"/><path d="M6 58L58 6M58 6h-12M58 6v12"/></svg>',
+  flutiste:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M8 50L50 8l6 6-42 42z"/><circle cx="26" cy="38" r="2" fill="currentColor"/><circle cx="33" cy="31" r="2" fill="currentColor"/><circle cx="40" cy="24" r="2" fill="currentColor"/><path d="M44 46c4-2 8 0 10 4M48 40c4-2 8 0 10 4"/></svg>',
+  chasseur:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><circle cx="32" cy="32" r="20"/><circle cx="32" cy="32" r="8"/><path d="M32 4v14M32 46v14M4 32h14M46 32h14"/></svg>',
+  ancien:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M32 6l22 8v16c0 14-10 23-22 28C20 53 10 44 10 30V14z"/><path d="M24 31l6 6 11-12"/></svg>',
+  petitefille:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M6 34c8-8 17-12 26-12s18 4 26 12"/><path d="M14 30c6 6 12 9 18 9s12-3 18-9"/><circle cx="32" cy="32" r="5" fill="currentColor"/><path d="M14 22l-4-6M24 17l-2-7M40 17l2-7M50 22l4-6"/></svg>'
 };
+/* Ordre des rôles spéciaux dans les réglages et la distribution */
+const SPECIALS = ["voyante","medecin","cupidon","flutiste","chasseur","ancien","petitefille"];
 const ROLES = {
   loup:{nom:"Loup-garou", c:"#e1485f", desc:"Chaque nuit, avec les autres loups, tu choisis une victime en silence. Le jour, fais-toi passer pour un simple villageois.", goal:"Tu gagnes quand les loups sont aussi nombreux que les villageois."},
   voyante:{nom:"Voyante", c:"#f0b35a", desc:"Chaque nuit, réponds à une question pour découvrir le rôle d'un joueur de ton choix.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés."},
   medecin:{nom:"Médecin", c:"#43b981", desc:"Chaque nuit, tu protèges une personne contre l'attaque des loups. Jamais la même deux nuits de suite.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés."},
-  villageois:{nom:"Villageois", c:"#86a9e6", desc:"Tu n'as pas de pouvoir spécial : tes connaissances et ton flair sont tes armes. Démasque les loups pendant le débat.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés."}
+  villageois:{nom:"Villageois", c:"#86a9e6", desc:"Tu n'as pas de pouvoir spécial : tes connaissances et ton flair sont tes armes. Démasque les loups pendant le débat.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés."},
+  cupidon:{nom:"Cupidon", c:"#ef7fb0", desc:"Une seule fois dans la partie, tu désignes deux amoureux (tu peux te choisir). Si l'un d'eux meurt, l'autre meurt de chagrin. Tu dois bien répondre à une question pour tirer ta flèche; sinon, tu réessaies la nuit suivante.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés.", short:"Désigne deux amoureux (en répondant bien à une question)."},
+  flutiste:{nom:"Joueur de flûte", c:"#4fc3b8", desc:"Chaque nuit, tu charmes deux joueurs. Les joueurs charmés se reconnaissent entre eux, mais ne changent pas de camp.", goal:"Tu gagnes seul quand tous les joueurs encore en vie sont sous ton charme.", short:"Charme deux joueurs par nuit (en répondant bien); gagne seul si tout le monde est charmé."},
+  chasseur:{nom:"Chasseur", c:"#d39a5c", desc:"Si tu es éliminé, de jour comme de nuit, tu tires une dernière balle et tu emportes un joueur de ton choix.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés.", short:"Emporte un joueur avec lui quand il est éliminé."},
+  ancien:{nom:"Ancien", c:"#b8b07e", desc:"Tu es coriace : tu survis à la première attaque des loups-garous. La deuxième te sera fatale.", goal:"Tu gagnes avec le village quand tous les loups sont éliminés.", short:"Survit à la première attaque des loups."},
+  petitefille:{nom:"Petite fille", c:"#d99be0", desc:"Pendant le tour des loups, tu peux entrouvrir les yeux pour les espionner. Attention : s'ils te surprennent, ils pourraient te choisir !", goal:"Tu gagnes avec le village quand tous les loups sont éliminés.", short:"Peut espionner les loups en entrouvrant les yeux."}
 };
+ROLES.voyante.short = "Découvre le rôle d'un joueur chaque nuit.";
+ROLES.medecin.short = "Protège un joueur chaque nuit; possède des injections mortelles.";
+const LOVE = id => S && S.lovers && S.lovers.includes(id);
+const partnerOf = id => S.players[S.lovers.find(x => x !== id)];
 
 /* ---------- Utilitaires ---------- */
 const $ = s => document.querySelector(s);
@@ -339,7 +679,7 @@ const store = {
 };
 const autoWolves = n => Math.max(1, Math.round(n / 6));
 
-const DEFAULTS = {wolves:"auto", voyante:true, medecin:true, qVictim:true, qDefense:true, qVillage:true, qSeer:true, answerMode:"card", timer:30, systems:["dig","res","cir","lym","exc","ner","mus","rep","perso"]};
+const DEFAULTS = {wolves:"auto", voyante:true, medecin:true, cupidon:true, flutiste:true, chasseur:true, ancien:false, petitefille:false, injections:1, qVictim:true, qVillage:true, qSeer:true, answerMode:"card", timer:30, systems:["dig","res","cir","lym","exc","ner","mus","rep","perso"]};
 let settings = Object.assign({}, DEFAULTS, store.get("lg-settings2", {}));
 let namesText = store.get("lg-names", "");
 let customText = store.get("lg-custom", "");
@@ -383,7 +723,13 @@ function scr({kicker = "", title = "", script = "", body = "", actions = ""}){
 const btn = (act, label, cls = "", arg) => `<button type="button" class="btn ${cls}" data-act="${act}"${arg !== undefined ? ` data-arg="${esc(arg)}"` : ""}>${label}</button>`;
 function roleCard(role){
   const r = ROLES[role];
-  return `<div class="rolecard" style="--role:${r.c}">${ICON[role]}<div><h2>${r.nom}</h2><p>${r.desc}</p><p class="goal">${r.goal}</p></div></div>`;
+  let desc = r.desc;
+  if (role === "medecin") {
+    const n = S && S.players ? S.injectionsStart : settings.injections;
+    desc = `Chaque nuit, tu protèges une personne contre l'attaque des loups (jamais la même deux nuits de suite).` +
+      (n > 0 ? ` Tu as aussi ${n} injection${n > 1 ? "s" : ""} mortelle${n > 1 ? "s" : ""} pour éliminer un joueur pendant la nuit.` : "");
+  }
+  return `<div class="rolecard" style="--role:${r.c}">${ICON[role]}<div><h2>${r.nom}</h2><p>${desc}</p><p class="goal">${r.goal}</p></div></div>`;
 }
 function setMood(m, label){
   document.body.dataset.mood = m;
@@ -457,13 +803,30 @@ function renderVillage(){
 }
 
 function record(s, ok){ const r = S.stats[s] || (S.stats[s] = {ok:0, n:0}); r.n++; if (ok) r.ok++; }
-function drawQ(){ if (!S.deck.length) S.deck = shuffle(poolFor(S.systems)); return S.deck.pop(); }
+/* Questions déjà posées, gardées d'une partie à l'autre : on pige d'abord parmi celles jamais posées */
+let usedQ = new Set(store.get("lg-used", []));
+function freshCount(systems){ return poolFor(systems).filter(q => !usedQ.has(q.q)).length; }
+function drawQ(){
+  if (!S.deck.length) {
+    const pool = poolFor(S.systems);
+    let fresh = pool.filter(q => !usedQ.has(q.q));
+    if (!fresh.length) { pool.forEach(q => usedQ.delete(q.q)); fresh = pool; }
+    S.deck = shuffle(fresh);
+  }
+  const q = S.deck.pop();
+  usedQ.add(q.q); store.set("lg-used", [...usedQ]);
+  return q;
+}
 const isAlive = role => S.players.some(p => p.alive && p.role === role);
 function checkWin(){
-  const w = S.players.filter(p => p.alive && p.role === "loup").length;
-  const o = S.players.filter(p => p.alive && p.role !== "loup").length;
-  if (w === 0) return "village";
-  if (w >= o) return "loups";
+  const alive = S.players.filter(p => p.alive);
+  const fl = alive.find(p => p.role === "flutiste");
+  if (fl && alive.every(p => p === fl || S.charmed.includes(p.id))) return "flutiste";
+  if (S.lovers && alive.length === 2 && alive.every(p => S.lovers.includes(p.id)) &&
+      (alive[0].role === "loup") !== (alive[1].role === "loup")) return "amoureux";
+  const w = alive.filter(p => p.role === "loup").length;
+  if (w === 0) return fl ? null : "village";
+  if (w >= alive.length - w) return "loups";
   return null;
 }
 
@@ -471,12 +834,13 @@ function newGame(names){
   const n = names.length;
   const nW = settings.wolves === "auto" ? autoWolves(n) : +settings.wolves;
   let roles = Array(nW).fill("loup");
-  if (settings.voyante) roles.push("voyante");
-  if (settings.medecin) roles.push("medecin");
+  SPECIALS.forEach(r => { if (settings[r]) roles.push(r); });
   while (roles.length < n) roles.push("villageois");
   roles = shuffle(roles);
+  const inj = settings.medecin ? +settings.injections : 0;
   S = {phase:"deal", names, players:names.map((name, i) => ({id:i, name, role:roles[i], alive:true, cleared:false})),
-       round:1, lastProtected:null, protectedTonight:null, victim:null, deck:[], stats:{}, nWolves:nW, systems:settings.systems.slice()};
+       round:1, lastProtected:null, protectedTonight:null, victim:null, injected:null, injections:inj, injectionsStart:inj,
+       lovers:null, charmed:[], ancienHit:false, deck:[], stats:{}, nWolves:nW, systems:settings.systems.slice()};
 }
 
 /* ---------- Composants de jeu ---------- */
@@ -606,6 +970,25 @@ function pickPlayer(o){
   okBtn.disabled = true;
 }
 
+/* Choisir plusieurs joueurs (Cupidon, joueur de flûte) */
+function pickMany(o){
+  const sel = [];
+  const list = S.players.filter(p => p.alive && (!o.filter || o.filter(p)));
+  const need = Math.min(o.count, list.length);
+  if (!need) return o.onConfirm([]);
+  const body = `<p class="note">Choisissez ${need} joueur${need > 1 ? "s" : ""}.</p><div class="grid-players">${list.map(p => `<button type="button" class="pl" data-act="tog" data-arg="${p.id}" aria-pressed="false">${esc(p.name)}</button>`).join("")}</div>`;
+  render(scr({kicker:o.kicker, title:o.title, script:o.script, body, actions:btn("ok", o.confirmLabel || "Confirmer")}), {
+    tog: id => {
+      id = +id; const i = sel.indexOf(id);
+      if (i >= 0) sel.splice(i, 1); else { if (sel.length >= need) sel.shift(); sel.push(id); }
+      stage.querySelectorAll(".pl").forEach(b => b.setAttribute("aria-pressed", String(sel.includes(+b.dataset.arg))));
+      okBtn.disabled = sel.length !== need;
+    },
+    ok: () => { if (sel.length === need) o.onConfirm(sel.map(i => S.players[i])); }
+  });
+  const okBtn = stage.querySelector('[data-act="ok"]');
+  okBtn.disabled = true;
+}
 function simple(kicker, title, script, label, next, body = ""){
   render(scr({kicker, title, script, body, actions:btn("go", label)}), {go:next});
 }
@@ -649,21 +1032,53 @@ function meneurList(){
 }
 
 /* ---------- Nuit ---------- */
+/* Ordre : Cupidon (1re nuit) → amoureux → médecin → voyante → loups → joueur de flûte → charmés → jour */
 function startNight(){
-  S.phase = "night"; S.protectedTonight = null; S.victim = null;
+  S.phase = "night"; S.protectedTonight = null; S.victim = null; S.injected = null;
   setMood("night", `Nuit ${S.round}`);
   simple(`Nuit ${S.round}`, "Le village s'endort",
-    "La nuit tombe sur Sainte-Cellule. Tout le monde ferme les yeux et pose la tête sur son bureau.", "Continuer", nightDoctor);
+    "La nuit tombe sur Sainte-Cellule. Tout le monde ferme les yeux et pose la tête sur son bureau.", "Continuer", nightCupid);
+}
+/* Cupidon agit une seule fois. S'il répond mal, sa flèche rate : il réessaie la nuit suivante. */
+function nightCupid(){
+  if (S.lovers || !isAlive("cupidon")) return nightDoctor();
+  const k = `Nuit ${S.round} · Cupidon`;
+  const pick = () => pickMany({kicker:k, title:"Qui seront les amoureux ?", count:2,
+    script:"Cupidon, pointe les deux joueurs qui tomberont amoureux. Tu peux te choisir toi-même.",
+    confirmLabel:"Unir ces deux joueurs",
+    onConfirm: pair => {
+      if (pair.length < 2) return nightDoctor();
+      const [a, b] = pair;
+      S.lovers = [a.id, b.id];
+      simple(k, "Cupidon se rendort", "Cupidon, ferme les yeux.", "Continuer", () =>
+        simple(`Nuit ${S.round} · Amoureux`, `${esc(a.name)} <span class="heart">♥</span> ${esc(b.name)}`,
+          "Le meneur touche l'épaule des deux amoureux. Amoureux, ouvrez les yeux et regardez-vous : si l'un de vous meurt, l'autre mourra de chagrin. Puis refermez les yeux.",
+          "Continuer", nightDoctor));
+    }});
+  if (!settings.qSeer) return simple(k, "Cupidon se réveille", "Cupidon, ouvre les yeux.", "Continuer", pick);
+  simple(k, "Cupidon se réveille",
+    "Cupidon, ouvre les yeux. Pour décocher ta flèche, réponds à la question en me montrant ta fiche A, B, C ou D.",
+    "Afficher la question", () => askQuestion({mode:"click", kicker:k, title:"Question de Cupidon",
+      onDone: ok => ok ? pick() : simple(k, "La flèche rate sa cible !", "Mauvaise réponse : personne ne tombe amoureux cette nuit. Tu pourras réessayer la nuit prochaine. Cupidon, ferme les yeux.", "Continuer", nightDoctor)}));
 }
 function nightDoctor(){
   if (!isAlive("medecin")) return nightSeer();
   const k = `Nuit ${S.round} · Médecin`, last = S.lastProtected;
+  const doc = S.players.find(p => p.alive && p.role === "medecin");
+  const sleep = () => simple(k, "Le médecin se rendort", "Médecin, ferme les yeux.", "Continuer", nightSeer);
+  const inject = () => {
+    if (S.injections <= 0) return sleep();
+    pickPlayer({kicker:k, title:"Une injection mortelle ?",
+      script:`Médecin, veux-tu utiliser une injection mortelle cette nuit ? Il t'en reste ${S.injections}. Pointe ta cible, ou fais non de la tête.`,
+      filter: p => p.id !== doc.id, confirmLabel:"Faire l'injection", allowNone:true, noneLabel:"Pas cette nuit", onNone:sleep,
+      onConfirm: p => { S.injected = p.id; S.injections--; sleep(); }});
+  };
   pickPlayer({kicker:k, title:"Le médecin se réveille",
-    script:"Médecin, ouvre les yeux. Qui veux-tu protéger cette nuit ? Pointe une personne.",
+    script:"Médecin, ouvre les yeux. Qui veux-tu protéger contre les loups cette nuit ? Pointe une personne.",
     filter: p => p.id !== last,
     note: last !== null && S.players[last].alive ? `${esc(S.players[last].name)} a été protégé·e la nuit dernière et ne peut pas l'être deux nuits de suite.` : "",
     confirmLabel:"Protéger cette personne",
-    onConfirm: p => { S.protectedTonight = p.id; S.lastProtected = p.id; simple(k, "Le médecin se rendort", "Médecin, ferme les yeux.", "Continuer", nightSeer); }
+    onConfirm: p => { S.protectedTonight = p.id; S.lastProtected = p.id; inject(); }
   });
 }
 function nightSeer(){
@@ -682,12 +1097,34 @@ function nightSeer(){
       onDone: ok => ok ? pick() : simple(k, "Vision brouillée", "Ta vision est brouillée cette nuit. Voyante, ferme les yeux.", "Continuer", nightWolves)}));
 }
 function nightWolves(){
+  if (!isAlive("loup")) return nightFlute();
   const k = `Nuit ${S.round} · Loups-garous`;
   pickPlayer({kicker:k, title:"Les loups-garous se réveillent",
     script:"Loups-garous, ouvrez les yeux. Mettez-vous d'accord en silence et pointez votre victime.",
     filter: p => p.role !== "loup", confirmLabel:"Attaquer cette personne",
-    onConfirm: p => { S.victim = p.id; simple(k, "Les loups se rendorment", "Loups-garous, fermez les yeux.", "Faire lever le jour", dawn); }
+    onConfirm: p => { S.victim = p.id; simple(k, "Les loups se rendorment", "Loups-garous, fermez les yeux.", "Continuer", nightFlute); }
   });
+}
+function nightFlute(){
+  if (!isAlive("flutiste")) return dawn();
+  const k = `Nuit ${S.round} · Joueur de flûte`;
+  const fl = S.players.find(p => p.alive && p.role === "flutiste");
+  const charmedWake = () => {
+    const list = S.players.filter(p => p.alive && S.charmed.includes(p.id));
+    if (!list.length) return dawn();
+    simple(`Nuit ${S.round} · Charmés`, "Les joueurs charmés",
+      "Le meneur touche la tête des joueurs charmés. Joueurs charmés, ouvrez les yeux et regardez qui d'autre est sous le charme. Puis refermez les yeux.",
+      "Faire lever le jour", dawn, `<p class="charmlist">${list.map(p => esc(p.name)).join(" · ")}</p>`);
+  };
+  const pick = () => pickMany({kicker:k, title:"Qui veux-tu charmer ?", count:2,
+    script:"Joueur de flûte, pointe les deux joueurs que tu veux charmer cette nuit.",
+    filter: p => p.id !== fl.id && !S.charmed.includes(p.id), confirmLabel:"Charmer ces joueurs",
+    onConfirm: list => { list.forEach(p => S.charmed.push(p.id)); simple(k, "Le joueur de flûte se rendort", "Joueur de flûte, ferme les yeux.", "Continuer", charmedWake); }});
+  if (!settings.qSeer) return simple(k, "Le joueur de flûte se réveille", "Joueur de flûte, ouvre les yeux.", "Continuer", pick);
+  simple(k, "Le joueur de flûte se réveille",
+    "Joueur de flûte, ouvre les yeux. Pour jouer ta mélodie, réponds à la question en me montrant ta fiche A, B, C ou D.",
+    "Afficher la question", () => askQuestion({mode:"click", kicker:k, title:"Question du joueur de flûte",
+      onDone: ok => ok ? pick() : simple(k, "Fausse note !", "Ta mélodie sonne faux cette nuit : personne n'est charmé. Joueur de flûte, ferme les yeux.", "Continuer", charmedWake)}));
 }
 
 /* ---------- Jour ---------- */
@@ -695,17 +1132,30 @@ function dawn(){
   S.phase = "day"; setMood("day", `Jour ${S.round}`);
   const k = `Jour ${S.round}`;
   const v = S.victim !== null ? S.players[S.victim] : null;
+  const inj = S.injected !== null ? S.players[S.injected] : null;
   const intro = "Le soleil se lève sur Sainte-Cellule. Tout le monde ouvre les yeux.";
-  if (!v || S.victim === S.protectedTonight) {
-    return simple(k, "Personne n'est éliminé", `${intro} Les loups ont attaqué cette nuit, mais leur victime a été soignée à temps.`, "Continuer", afterDawn);
+  let saved = false;
+  if (v && S.victim === S.protectedTonight) saved = true;
+  else if (v && v.role === "ancien" && !S.ancienHit) { S.ancienHit = true; saved = true; }
+  /* Morts de la nuit : la victime des loups (si elle n'a pas survécu), puis la cible de l'injection */
+  const finish = (wolfKill, line) => {
+    const q = [];
+    if (wolfKill) q.push({p:v, line});
+    if (inj && inj.alive && !(wolfKill && inj === v)) q.push({p:inj, line:"Une mystérieuse injection a fait son effet pendant la nuit."});
+    if (!q.length) return afterDawn();
+    killChain(q, k, afterDawn);
+  };
+  if (!v || saved) {
+    const msg = v ? "Les loups ont attaqué cette nuit, mais leur victime a survécu." : "Les loups n'ont attaqué personne cette nuit.";
+    return simple(k, inj ? "Une nuit agitée…" : "Personne n'a été dévoré", `${intro} ${msg}`, "Continuer", () => finish(false));
   }
-  if (!settings.qVictim) return eliminate(v, afterDawn, k, `${intro} Les loups-garous ont attaqué pendant la nuit.`);
+  if (!settings.qVictim) return finish(true, `${intro} Les loups-garous ont attaqué pendant la nuit.`);
   simple(k, `Les loups ont attaqué ${esc(v.name)}`,
     `${intro} Cette nuit, les loups-garous ont attaqué ${esc(v.name)}. Une bonne réponse peut encore lui sauver la vie !`,
     `Question de survie pour ${esc(v.name)}`, () => askQuestion({...solo(v), kicker:k, title:`Dernière chance pour ${esc(v.name)}`,
       onDone: ok => ok
-        ? simple(k, `${esc(v.name)} survit !`, "Son système immunitaire a repoussé l'attaque. Les loups devront réessayer.", "Continuer", afterDawn)
-        : eliminate(v, afterDawn, k, "Les loups-garous ont eu le dessus.")}));
+        ? simple(k, `${esc(v.name)} survit !`, "Son système immunitaire a repoussé l'attaque. Les loups devront réessayer.", "Continuer", () => finish(false))
+        : finish(true, "Les loups-garous ont eu le dessus.")}));
 }
 /* Question individuelle : à voix haute (le meneur clique la réponse dite ou pointée) ou par écrit (montrée au meneur seulement) */
 function solo(p){
@@ -715,13 +1165,37 @@ function solo(p){
     judge:`${n} choisit sa fiche (A, B, C ou D) et la montre seulement au meneur, sans la faire voir aux autres. Le reste du village garde le silence.`
   }};
 }
-function eliminate(p, next, k, line){
+/* Élimine les joueurs un à un : un amoureux entraîne l'autre, le chasseur tire avant que la file continue */
+function killChain(queue, k, next){
+  const item = queue.shift();
+  if (!item) { const w = checkWin(); return w ? endGame(w) : next(); }
+  const p = item.p;
+  if (!p.alive) return killChain(queue, k, next);
   p.alive = false;
+  let note = "";
+  if (LOVE(p.id)) {
+    const o = partnerOf(p.id);
+    note = `<p class="note"><span class="heart">♥</span> ${esc(p.name)} était amoureux·se de ${esc(o.name)}.</p>`;
+    if (o.alive) queue.push({p:o, line:`Le cœur brisé, ${esc(o.name)} ne peut survivre à la mort de ${esc(p.name)}.`});
+  }
   render(scr({kicker:k, title:`${esc(p.name)} est éliminé·e`,
-    script:`${line} ${esc(p.name)} ne peut plus parler jusqu'à la fin de la partie. Son rôle était…`,
-    body:roleCard(p.role), actions:btn("go", "Continuer")}),
-    {go: () => { const w = checkWin(); if (w) endGame(w); else next(); }});
+    script:`${item.line} ${esc(p.name)} ne peut plus parler jusqu'à la fin de la partie. Son rôle était…`,
+    body:roleCard(p.role) + note, actions:btn("go", "Continuer")}),
+    {go: () => p.role === "chasseur" ? hunterShot(p, k, queue, () => killChain(queue, k, next)) : killChain(queue, k, next)});
 }
+function hunterShot(h, k, queue, cont){
+  const n = esc(h.name);
+  if (!S.players.some(p => p.alive)) return cont();
+  const shoot = () => pickPlayer({kicker:k, title:"Le chasseur tire sa dernière balle",
+    script:`${n}, pointe la personne que tu emportes avec toi.`, confirmLabel:"Tirer",
+    allowNone:true, noneLabel:"Ne pas tirer", onNone:cont,
+    onConfirm: t => { queue.unshift({p:t, line:`${n}, le chasseur, a tiré sur ${esc(t.name)}.`}); cont(); }});
+  if (!settings.qSeer) return shoot();
+  simple(k, "Le chasseur saisit son fusil", `${n} a encore une balle. Une bonne réponse lui permet de tirer.`, "Afficher la question",
+    () => askQuestion({...solo(h), kicker:k, title:`Dernier tir de ${n}`,
+      onDone: ok => ok ? shoot() : simple(k, "Le fusil s'enraye !", "Mauvaise réponse : le coup ne part pas.", "Continuer", cont)}));
+}
+function eliminate(p, next, k, line){ killChain([{p, line}], k, next); }
 function afterDawn(){ settings.qVillage ? villageQuestion() : vote(); }
 function villageQuestion(){
   const k = `Jour ${S.round} · Laboratoire`;
@@ -741,15 +1215,8 @@ function vote(){
   const k = `Jour ${S.round} · Vote`;
   const startPick = () => pickPlayer({kicker:k, title:"Qui le village accuse-t-il ?",
     script:"Votez à main levée. Le meneur sélectionne la personne qui a reçu le plus de votes.",
-    confirmLabel:"Accuser cette personne", allowNone:true, noneLabel:"Personne aujourd'hui", onNone:endDay,
-    onConfirm: p => {
-      if (!settings.qDefense) return eliminate(p, endDay, k, "Le village a tranché.");
-      simple(k, `${esc(p.name)} est accusé·e`, `${esc(p.name)}, défends-toi ! Une bonne réponse te sauve.`,
-        "Question de défense", () => askQuestion({...solo(p), kicker:k, title:`Défense de ${esc(p.name)}`,
-          onDone: ok => ok
-            ? simple(k, `${esc(p.name)} est acquitté·e`, "Sa science a convaincu le village. Personne n'est éliminé aujourd'hui.", "Continuer", endDay)
-            : eliminate(p, endDay, k, "Le village a tranché.")}));
-    }});
+    confirmLabel:"Éliminer cette personne", allowNone:true, noneLabel:"Personne aujourd'hui", onNone:endDay,
+    onConfirm: p => eliminate(p, endDay, k, "Le village a tranché.")});
   render(scr({kicker:k, title:"Le village débat",
     script:"Qui se cache parmi nous ? Discutez, accusez, défendez-vous. Les personnes éliminées restent silencieuses.",
     body:`<div class="debate"><span id="dclock" class="clock">2:00</span>${btn("clock", "Lancer 2 minutes de débat", "ghost")}</div>`,
@@ -773,19 +1240,22 @@ function endDay(){ S.round++; startNight(); }
 /* ---------- Fin ---------- */
 function endGame(w){
   S.phase = "end"; setMood("day", "Fin de la partie");
-  const village = w === "village";
+  const END = {
+    village:["Le village a gagné !", "Tous les loups-garous ont été démasqués. Sainte-Cellule est sauvée grâce à la science de ses habitants !"],
+    loups:["Les loups-garous ont gagné !", "Les loups-garous sont maintenant aussi nombreux que les villageois. Sainte-Cellule est tombée…"],
+    flutiste:["Le joueur de flûte a gagné !", "Tous les survivants sont sous le charme de sa mélodie. Le joueur de flûte l'emporte, seul contre tous !"],
+    amoureux:["Les amoureux ont gagné !", "Un loup-garou et un villageois amoureux sont les deux derniers survivants. L'amour a triomphé de tout !"]
+  }[w];
   const rows = Object.keys(SYS).filter(s => S.stats[s]).map(s => {
     const r = S.stats[s], pct = Math.round(r.ok / r.n * 100);
     return `<div class="statrow"><span><span class="chip" style="background:${SYS[s].c}">${SYS[s].nom}</span></span><span class="bar"><i style="width:${pct}%"></i></span><span class="n">${r.ok}/${r.n}</span></div>`;
   }).join("") || `<p class="note">Aucune question posée.</p>`;
   const body = `<div class="results">
     <div class="box"><h3>Réussite par système</h3><p class="hint">Bonnes réponses sur questions posées pendant la partie.</p>${rows}</div>
-    <div class="box"><h3>Tous les rôles</h3><div class="allroles">${S.players.map(p => `<div><span>${esc(p.name)}</span><span class="vtag ${p.role === "loup" ? "loup" : ""}">${ROLES[p.role].nom}</span></div>`).join("")}</div></div>
+    <div class="box"><h3>Tous les rôles</h3><div class="allroles">${S.players.map(p => `<div><span>${esc(p.name)}${LOVE(p.id) ? ' <span class="heart">♥</span>' : ""}${S.charmed.includes(p.id) ? " ♪" : ""}</span><span class="vtag ${p.role === "loup" ? "loup" : ""}">${ROLES[p.role].nom}</span></div>`).join("")}</div>${S.lovers || S.charmed.length ? '<p class="hint"><span class="heart">♥</span> amoureux · ♪ charmé par le joueur de flûte</p>' : ""}</div>
   </div>`;
   render(scr({kicker:`Fin de la partie · ${S.round} ${S.round > 1 ? "jours" : "jour"}`,
-    title: village ? "Le village a gagné !" : "Les loups-garous ont gagné !",
-    script: village ? "Tous les loups-garous ont été démasqués. Sainte-Cellule est sauvée grâce à la science de ses habitants !"
-                    : "Les loups-garous sont maintenant aussi nombreux que les villageois. Sainte-Cellule est tombée…",
+    title: END[0], script: END[1],
     body, actions: btn("again", "Rejouer avec les mêmes joueurs") + btn("setup", "Retour aux réglages", "ghost")}),
     {again: () => { newGame(S.names); deal(0); }, setup});
 }
@@ -807,7 +1277,7 @@ function setup(){
   }).join("");
   const wolfOpts = `<option value="auto">Automatique</option>` + [1,2,3,4,5,6,7,8].map(i => `<option value="${i}">${i}</option>`).join("");
   const body = `
-  <p class="setup-intro">Un loup-garou classique où la science décide qui survit. Le meneur (vous) projette cet écran et lit les textes encadrés à voix haute. Une bonne réponse peut sauver une victime, innocenter un villageois ou faire acquitter un accusé.</p>
+  <p class="setup-intro">Un loup-garou classique où la science décide qui survit. Le meneur (vous) projette cet écran et lit les textes encadrés à voix haute. Une bonne réponse peut sauver la victime des loups ou innocenter un villageois, mais le vote du village est sans appel.</p>
   <div class="setup-grid">
     <div class="box">
       <h3>1. Les joueurs</h3>
@@ -819,14 +1289,15 @@ function setup(){
     <div class="box">
       <h3>2. Les rôles</h3>
       <div class="row"><label for="wolves">Nombre de loups-garous</label><select id="wolves">${wolfOpts}</select><span class="hint" id="wolfHint"></span></div>
-      <label class="check"><input type="checkbox" id="voyante" ${settings.voyante ? "checked" : ""}><span>Voyante<small>Chaque nuit, découvre le rôle d'un joueur.</small></span></label>
-      <label class="check"><input type="checkbox" id="medecin" ${settings.medecin ? "checked" : ""}><span>Médecin<small>Chaque nuit, protège un joueur contre les loups.</small></span></label>
+      ${SPECIALS.map(r => `<label class="check"><input type="checkbox" class="role" id="${r}" ${settings[r] ? "checked" : ""}><span>${ROLES[r].nom}<small>${ROLES[r].short}</small></span></label>`).join("")}
+      <div class="row"><label for="injections">Injections mortelles du médecin</label><select id="injections">
+        <option value="0">Aucune</option><option value="1">1 par partie</option><option value="2">2 par partie</option><option value="3">3 par partie</option></select></div>
+      <p class="hint" id="roleHint"></p>
       <h3>3. Les questions décident…</h3>
       <label class="check"><input type="checkbox" id="qVictim" ${settings.qVictim ? "checked" : ""}><span>La survie de la victime des loups<small>Bonne réponse : elle survit à l'attaque.</small></span></label>
-      <label class="check"><input type="checkbox" id="qDefense" ${settings.qDefense ? "checked" : ""}><span>La défense de l'accusé·e<small>Bonne réponse : acquitté·e malgré le vote.</small></span></label>
       <label class="check"><input type="checkbox" id="qVillage" ${settings.qVillage ? "checked" : ""}><span>Un indice pour tout le village<small>Chacun montre sa fiche au meneur seulement; si la majorité a raison, un innocent est révélé.</small></span></label>
-      <label class="check"><input type="checkbox" id="qSeer" ${settings.qSeer ? "checked" : ""}><span>Le pouvoir de la voyante<small>Elle montre sa fiche au meneur, les yeux des autres fermés.</small></span></label>
-      <div class="row"><label for="answerMode">Réponse de la victime et de l'accusé·e</label><select id="answerMode">
+      <label class="check"><input type="checkbox" id="qSeer" ${settings.qSeer ? "checked" : ""}><span>Les pouvoirs spéciaux<small>La voyante, Cupidon et le joueur de flûte doivent bien répondre pour utiliser leur pouvoir : ils montrent leur fiche au meneur, les yeux des autres fermés. Le chasseur doit bien répondre pour tirer.</small></span></label>
+      <div class="row"><label for="answerMode">Réponse de la victime (et du chasseur)</label><select id="answerMode">
         <option value="card">Avec les fiches ABCD, montrées au meneur seulement</option><option value="voice">À voix haute ou en pointant</option></select></div>
       <p class="hint">Vous pourrez aussi changer de façon sur l'écran de chaque question.</p>
       <div class="row"><label for="timer">Temps par question</label><select id="timer">
@@ -835,6 +1306,7 @@ function setup(){
     <div class="box">
       <h3>4. Les systèmes au programme</h3>
       <div class="sys-list">${sysBoxes}</div>
+      <div class="row"><span class="hint" id="freshInfo"></span><button type="button" class="mini" id="resetUsed">Remettre toutes les questions à neuf</button></div>
       <details><summary>Ajouter mes propres questions</summary>
         <p class="hint">Une question par ligne, champs séparés par une barre verticale. La bonne réponse vient en premier; l'ordre est mélangé au moment du jeu.</p>
         <p class="hint"><code>Question | Bonne réponse | Mauvaise 1 | Mauvaise 2 | Mauvaise 3 | Explication (facultatif)</code></p>
@@ -846,10 +1318,10 @@ function setup(){
   <div class="box" style="margin-top:20px">
     <h3>Déroulement d'un tour</h3>
     <ol class="howto">
-      <li><b>Nuit :</b> tout le monde ferme les yeux. Le médecin protège quelqu'un, la voyante répond à une question pour sonder un joueur, puis les loups pointent leur victime.</li>
+      <li><b>Nuit :</b> tout le monde ferme les yeux. Cupidon répond à une question pour unir deux amoureux (s'il se trompe, il réessaie la nuit suivante). Ensuite, chaque nuit : le médecin protège quelqu'un (et peut utiliser une injection mortelle), la voyante répond à une question pour sonder un joueur, les loups pointent leur victime, puis le joueur de flûte charme deux joueurs.</li>
       <li><b>Lever du jour :</b> la victime répond à une question de survie, avec sa fiche montrée au meneur seulement (l'écran indique si c'est bon sans révéler son choix) ou à voix haute. Mauvaise réponse : elle est éliminée et son rôle est révélé.</li>
       <li><b>Laboratoire :</b> au signal « 3, 2, 1… fiches ! », tous les joueurs en vie montrent leur fiche au meneur. Le meneur compte les fiches de la bonne couleur; si la majorité a raison, un innocent est révélé. Les loups ont intérêt à répondre faux… sans que personne le sache.</li>
-      <li><b>Débat et vote :</b> le village accuse quelqu'un, qui répond à une question de défense, avec sa fiche ou à voix haute, pour sauver sa peau.</li>
+      <li><b>Débat et vote :</b> le village vote pour éliminer quelqu'un. Pas de seconde chance : la personne est éliminée et son rôle est révélé.</li>
     </ol>
     <p class="hint">Matériel : un jeu de fiches A, B, C, D par élève. Chaque lettre a sa couleur et sa forme (A rond bleu, B triangle orange, C carré vert, D losange violet), les mêmes qu'à l'écran, pour compter rapidement.</p>
   </div>
@@ -866,6 +1338,9 @@ function setup(){
     const k = readNames().length;
     $("#ncount").innerHTML = `<b>${k}</b> joueur${k > 1 ? "s" : ""}`;
     $("#wolfHint").textContent = settings.wolves === "auto" ? (k >= 5 ? `= ${autoWolves(k)} pour ${k} joueurs` : "") : "";
+    const nW = settings.wolves === "auto" ? autoWolves(k) : +settings.wolves;
+    const sp = SPECIALS.filter(r => settings[r]).length;
+    $("#roleHint").textContent = k >= 5 ? `Avec ${k} joueurs : ${nW} loup${nW > 1 ? "s" : ""}, ${sp} rôle${sp > 1 ? "s" : ""} spécia${sp > 1 ? "ux" : "l"} et ${Math.max(0, k - nW - sp)} villageois.` : "";
   };
   refreshCounts();
   $("#names").addEventListener("input", e => { namesText = e.target.value; store.set("lg-names", namesText); refreshCounts(); });
@@ -876,10 +1351,18 @@ function setup(){
   });
   $("#wolves").addEventListener("change", e => { settings.wolves = e.target.value; save(); refreshCounts(); });
   $("#timer").addEventListener("change", e => { settings.timer = +e.target.value; save(); });
-  ["voyante","medecin","qVictim","qDefense","qVillage","qSeer"].forEach(id =>
-    $("#" + id).addEventListener("change", e => { settings[id] = e.target.checked; save(); }));
+  SPECIALS.concat(["qVictim","qVillage","qSeer"]).forEach(id =>
+    $("#" + id).addEventListener("change", e => { settings[id] = e.target.checked; save(); refreshCounts(); }));
+  $("#injections").value = String(settings.injections);
+  $("#injections").addEventListener("change", e => { settings.injections = +e.target.value; save(); });
+  const refreshFresh = () => {
+    const tot = poolFor(settings.systems).length, f = freshCount(settings.systems);
+    $("#freshInfo").textContent = `${f} question${f > 1 ? "s" : ""} jamais posée${f > 1 ? "s" : ""} sur ${tot} pour les systèmes cochés.`;
+  };
+  refreshFresh();
+  $("#resetUsed").addEventListener("click", () => { usedQ.clear(); store.set("lg-used", []); refreshFresh(); });
   stage.querySelectorAll(".sys").forEach(c => c.addEventListener("change", () => {
-    settings.systems = [...stage.querySelectorAll(".sys:checked")].map(x => x.value); save();
+    settings.systems = [...stage.querySelectorAll(".sys:checked")].map(x => x.value); save(); refreshFresh();
   }));
   const customInfo = () => {
     const r = parseCustom(customText);
@@ -895,7 +1378,7 @@ function setup(){
 function startGame(){
   const names = readNames(), n = names.length, err = $("#err");
   const nW = settings.wolves === "auto" ? autoWolves(n) : +settings.wolves;
-  const specials = (settings.voyante ? 1 : 0) + (settings.medecin ? 1 : 0);
+  const specials = SPECIALS.filter(r => settings[r]).length;
   if (n < 5) return err.textContent = "Il faut au moins 5 joueurs pour commencer.";
   if (nW * 2 >= n) return err.textContent = `Avec ${n} joueurs, il faut moins de ${Math.ceil(n / 2)} loups-garous. Réduisez leur nombre.`;
   if (nW + specials > n) return err.textContent = "Il y a plus de rôles spéciaux que de joueurs.";

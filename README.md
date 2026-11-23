@@ -2,7 +2,7 @@
 
 Un jeu de loup-garou à projeter en classe, où les connaissances en science décident qui survit. Conçu pour la science de **Secondaire 3** (Québec), univers vivant : l'être humain.
 
-Le village de Sainte-Cellule cache des loups-garous. L'enseignant·e mène la partie à l'écran et lit les textes encadrés à voix haute. Une bonne réponse peut sauver la victime des loups, faire acquitter une personne accusée ou donner un indice au village.
+Le village de Sainte-Cellule cache des loups-garous. L'enseignant·e mène la partie à l'écran et lit les textes encadrés à voix haute. Une bonne réponse peut sauver la victime des loups ou donner un indice au village, mais le vote du village est sans appel.
 
 ## Jouer
 
@@ -12,17 +12,29 @@ Ouvrir `index.html` dans un navigateur (ou la page GitHub Pages du dépôt) et p
 
 ## Déroulement d'un tour
 
-1. **Nuit** (yeux fermés) : le médecin protège un joueur, la voyante montre sa fiche pour répondre à une question et, si elle a raison, découvre le rôle d'un joueur. Les loups pointent leur victime.
+1. **Nuit** (yeux fermés) : Cupidon répond à une question pour unir deux amoureux (s'il se trompe, il réessaie la nuit suivante). Ensuite, chaque nuit : le médecin protège un joueur (et peut utiliser une injection mortelle), la voyante montre sa fiche pour répondre à une question et, si elle a raison, découvre le rôle d'un joueur, les loups pointent leur victime, puis le joueur de flûte charme deux joueurs.
 2. **Lever du jour** : la victime répond à une question de survie en montrant sa fiche au meneur seulement (ou à voix haute). Mauvaise réponse : elle est éliminée et son rôle est révélé.
 3. **Laboratoire** : au signal « 3, 2, 1… fiches ! », tous les joueurs en vie montrent leur fiche au meneur. Si la majorité a raison, un innocent est révélé.
-4. **Débat et vote** : le village accuse quelqu'un, qui répond à une question de défense pour sauver sa peau.
+4. **Débat et vote** : le village vote pour éliminer quelqu'un. Pas de seconde chance : la personne est éliminée et son rôle est révélé.
 
-Le village gagne quand tous les loups sont éliminés. Les loups gagnent quand ils sont aussi nombreux que les villageois.
+Le village gagne quand tous les loups (et le joueur de flûte) sont éliminés. Les loups gagnent quand ils sont aussi nombreux que les autres joueurs. Le joueur de flûte gagne seul quand tous les survivants sont charmés. Un couple d'amoureux formé d'un loup et d'un villageois gagne s'il est le dernier en vie.
 
 ## Contenu
 
-- 85 questions à choix multiple avec explication, réparties sur 8 systèmes : digestif, respiratoire, circulatoire, lymphatique et immunité, excréteur, nerveux et sens, musculosquelettique, reproducteur. On coche les systèmes déjà vus en classe.
-- Rôles : loups-garous (nombre automatique ou au choix), voyante, médecin, villageois.
+- 405 questions à choix multiple avec explication, environ 50 par système, réparties sur 8 systèmes : digestif, respiratoire, circulatoire, lymphatique et immunité, excréteur, nerveux et sens, musculosquelettique, reproducteur. On coche les systèmes déjà vus en classe, ou un seul système pour une révision ciblée.
+- Pas de répétition : le jeu retient les questions déjà posées, d'une partie à l'autre, et pige d'abord parmi celles jamais posées. Quand elles ont toutes été vues, la banque repart à neuf (un bouton permet aussi de la remettre à neuf).
+- Rôles : loups-garous (nombre automatique ou au choix), villageois et sept rôles spéciaux à activer au choix :
+
+| Rôle | Pouvoir |
+|---|---|
+| Voyante | Chaque nuit, découvre le rôle d'un joueur (si elle répond bien à une question). |
+| Médecin | Chaque nuit, protège un joueur contre les loups. Possède de 0 à 3 injections mortelles par partie. |
+| Cupidon | Désigne deux amoureux une seule fois (s'il répond bien; sinon, il réessaie la nuit suivante). Si l'un meurt, l'autre meurt de chagrin. |
+| Joueur de flûte | Chaque nuit, charme deux joueurs (s'il répond bien). Gagne seul si tous les survivants sont charmés. |
+| Chasseur | Quand il est éliminé, tire une dernière balle (s'il répond bien) et emporte un joueur avec lui. |
+| Ancien | Survit à la première attaque des loups. |
+| Petite fille | Peut entrouvrir les yeux pour espionner les loups pendant leur tour. |
+
 - Distribution des rôles à l'écran, un élève à la fois, ou liste du meneur à copier pour faire des cartes papier.
 - Minuterie par question (facultative), 2 minutes de débat, bilan de réussite par système à la fin.
 
